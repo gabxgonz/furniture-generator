@@ -60,7 +60,7 @@ MonoBehaviour:
   backAvailability: 0
   leftAvailability: 1
   rightAvailability: 1
-  frontLeftAvailable: 0
+  frontLeftAvailable: 1
   frontRightAvailable: 0
   backLeftAvailable: 0
   backRightAvailable: 0

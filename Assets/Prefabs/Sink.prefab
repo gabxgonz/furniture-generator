@@ -48,9 +48,9 @@ MonoBehaviour:
   xLength: 1
   zLength: 1
   rotation: 0
-  origin: {x: 0, y: 0, z: 0}
+  origin: {x: 6, y: 0, z: 0}
   relativeLookDirection: 2
-  alignTo: 0700000009000000
+  alignTo: 07000000
   preferFront: 0
   preferBack: 0
   preferLeft: 1

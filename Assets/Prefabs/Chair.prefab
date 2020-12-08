@@ -47,12 +47,10 @@ MonoBehaviour:
   type: 1
   xLength: 1
   zLength: 1
-  alignToWall: 0
-  alignToFurniture: 1
   rotation: 0
-  origin: {x: 5, y: 0, z: 8}
+  origin: {x: 4, y: 0, z: 2}
   relativeLookDirection: 0
-  relatedFurniture: 0300000006000000
+  alignTo: 0300000006000000
   preferFront: 1
   preferBack: 1
   preferLeft: 0

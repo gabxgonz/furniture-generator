@@ -47,8 +47,8 @@ MonoBehaviour:
   type: 7
   xLength: 1
   zLength: 1
-  rotation: 0
-  origin: {x: 0, y: 0, z: 0}
+  rotation: 90
+  origin: {x: 0, y: 0, z: 1}
   relativeLookDirection: 5
   alignTo: 08000000
   preferFront: 1
@@ -61,7 +61,7 @@ MonoBehaviour:
   leftAvailability: 1
   rightAvailability: 1
   frontLeftAvailable: 0
-  frontRightAvailable: 0
+  frontRightAvailable: 1
   backLeftAvailable: 0
   backRightAvailable: 0
 --- !u!1001 &8662873638230462641
