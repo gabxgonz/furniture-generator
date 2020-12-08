@@ -50,9 +50,14 @@ MonoBehaviour:
   alignToWall: 0
   alignToFurniture: 0
   rotation: 0
-  origin: {x: 0, y: 0, z: 0}
+  origin: {x: 5, y: 0, z: 8}
   relativeLookDirection: 2
   relatedFurniture: 
+  preferFront: 1
+  preferBack: 1
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 1
   frontAvailability: 2
   backAvailability: 2
   leftAvailability: 2

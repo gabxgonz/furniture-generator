@@ -49,11 +49,16 @@ MonoBehaviour:
   zLength: 1
   alignToWall: 1
   alignToFurniture: 0
-  rotation: 0
-  origin: {x: 0, y: 0, z: 0}
+  rotation: 270
+  origin: {x: 9, y: 0, z: 7}
   relativeLookDirection: 2
   relatedFurniture: 
-  frontAvailability: 1
+  preferFront: 1
+  preferBack: 1
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 1
+  frontAvailability: 2
   backAvailability: 0
   leftAvailability: 1
   rightAvailability: 1

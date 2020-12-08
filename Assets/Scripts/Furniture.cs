@@ -33,6 +33,15 @@ public enum FacingDirection
     Right
 }
 
+public enum Side
+{
+    Front,
+    Back,
+    Left,
+    Right,
+    Corner
+}
+
 public class Furniture : MonoBehaviour
 {
 
@@ -41,14 +50,22 @@ public class Furniture : MonoBehaviour
     public int zLength = 1;
     public bool alignToWall = false;
     public bool alignToFurniture = false;
-    public float rotation = 0f;
-    public Vector3 origin = Vector3.zero;
+    [HideInInspector] public float rotation = 0f;
+    [HideInInspector] public Vector3 origin = Vector3.zero;
+
 
     [Header("Parent Furniture")]
     public FacingDirection relativeLookDirection = FacingDirection.Forward;
     public List<FurnitureType> relatedFurniture;
 
-    [Header("Available Adjacent Spaces")]
+    [Header("Parent Side Preference")]
+    public bool preferFront = true;
+    public bool preferBack = true;
+    public bool preferLeft = true;
+    public bool preferRight = true;
+    public bool preferCorner = true;
+
+    [Header("Available Child Spaces")]
     [Tooltip("Define spaces available for dependant furniture placement in front of this furniture.")]
     public SideSpace frontAvailability = SideSpace.All;
     [Tooltip("Define spaces available for dependant furniture placement behind this furniture.")]
@@ -58,10 +75,13 @@ public class Furniture : MonoBehaviour
     [Tooltip("Define spaces available for dependant furniture placement on the right of this furniture.")]
     public SideSpace rightAvailability = SideSpace.All;
 
-    [Header("Available Corner Spaces")]
+    [Tooltip("Define spaces available for dependant furniture placement on front left corner.")]
     public bool frontLeftAvailable = true;
+    [Tooltip("Define spaces available for dependant furniture placement on front right corner.")]
     public bool frontRightAvailable = true;
+    [Tooltip("Define spaces available for dependant furniture placement on back left corner.")]
     public bool backLeftAvailable = true;
+    [Tooltip("Define spaces available for dependant furniture placement on back right corner.")]
     public bool backRightAvailable = true;
 
     private List<Vector3> validSpaces;
@@ -271,9 +291,26 @@ public class Furniture : MonoBehaviour
         return reservedSpaces;
     }
 
+    public List<Vector3> ValidSpaces(Furniture childFurniture)
+    {
+        Dictionary<Side, bool> preferences = RelativePreferences(childFurniture);
+
+        return ValidSpaces(
+            preferences[Side.Front],
+            preferences[Side.Back],
+            preferences[Side.Left],
+            preferences[Side.Right],
+            preferences[Side.Corner]
+            );
+    }
+
     public List<Vector3> ValidSpaces()
     {
+        return ValidSpaces(true, true, true, true, true);
+    }
 
+    public List<Vector3> ValidSpaces(bool front, bool back, bool left, bool right, bool corner)
+    {
         if (validSpaces != null) validSpaces.Clear();
         if (validSpaces == null) validSpaces = new List<Vector3>();
 
@@ -287,162 +324,176 @@ public class Furniture : MonoBehaviour
 
         SetRelativeAvailability();
 
-        // Add corners
-        if (relativeFrontLeftAvailable) validSpaces.Add(FrontLeftAvailable());
-        if (relativeFrontRightAvailable) validSpaces.Add(FrontRightAvailable());
-        if (relativeBackLeftAvailable) validSpaces.Add(BackLeftAvailable());
-        if (relativeBackRightAvailable) validSpaces.Add(BackRightAvailable());
-
-        switch (relativeLeftAvailability)
+        if (corner)
         {
-            case SideSpace.All:
-                validSpaces.Add(LeftFirstAvailable());
-                validSpaces.Add(LeftLastAvailable());
-                validSpaces.AddRange(LeftInnerAvailable());
-                break;
-            case SideSpace.First:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(LeftLastAvailable());
-                }
-                else
-                {
+            if (relativeFrontLeftAvailable) validSpaces.Add(FrontLeftAvailable());
+            if (relativeFrontRightAvailable) validSpaces.Add(FrontRightAvailable());
+            if (relativeBackLeftAvailable) validSpaces.Add(BackLeftAvailable());
+            if (relativeBackRightAvailable) validSpaces.Add(BackRightAvailable());
+        }
+
+        if (left)
+        {
+            switch (relativeLeftAvailability)
+            {
+                case SideSpace.All:
                     validSpaces.Add(LeftFirstAvailable());
-                }
-                break;
-            case SideSpace.Last:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(LeftFirstAvailable());
-                }
-                else
-                {
                     validSpaces.Add(LeftLastAvailable());
-                }
-                break;
-            case SideSpace.Inner:
-                validSpaces.AddRange(LeftInnerAvailable());
-                break;
-            case SideSpace.Outer:
-                validSpaces.Add(LeftFirstAvailable());
-                validSpaces.Add(LeftLastAvailable());
-                break;
-            default:
-                break;
+                    validSpaces.AddRange(LeftInnerAvailable());
+                    break;
+                case SideSpace.First:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(LeftLastAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(LeftFirstAvailable());
+                    }
+                    break;
+                case SideSpace.Last:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(LeftFirstAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(LeftLastAvailable());
+                    }
+                    break;
+                case SideSpace.Inner:
+                    validSpaces.AddRange(LeftInnerAvailable());
+                    break;
+                case SideSpace.Outer:
+                    validSpaces.Add(LeftFirstAvailable());
+                    validSpaces.Add(LeftLastAvailable());
+                    break;
+                default:
+                    break;
+            }
         }
 
-        switch (relativeRightAvailability)
+        if (right)
         {
-            case SideSpace.All:
-                validSpaces.Add(RightFirstAvailable());
-                validSpaces.Add(RightLastAvailable());
-                validSpaces.AddRange(RightInnerAvailable());
-                break;
-            case SideSpace.First:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(RightLastAvailable());
-                }
-                else
-                {
+            switch (relativeRightAvailability)
+            {
+                case SideSpace.All:
                     validSpaces.Add(RightFirstAvailable());
-                }
-                break;
-            case SideSpace.Last:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(RightFirstAvailable());
-                }
-                else
-                {
                     validSpaces.Add(RightLastAvailable());
-                }
-                break;
-            case SideSpace.Inner:
-                validSpaces.AddRange(RightInnerAvailable());
-                break;
-            case SideSpace.Outer:
-                validSpaces.Add(RightFirstAvailable());
-                validSpaces.Add(RightLastAvailable());
-                break;
-            default:
-                break;
+                    validSpaces.AddRange(RightInnerAvailable());
+                    break;
+                case SideSpace.First:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(RightLastAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(RightFirstAvailable());
+                    }
+                    break;
+                case SideSpace.Last:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(RightFirstAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(RightLastAvailable());
+                    }
+                    break;
+                case SideSpace.Inner:
+                    validSpaces.AddRange(RightInnerAvailable());
+                    break;
+                case SideSpace.Outer:
+                    validSpaces.Add(RightFirstAvailable());
+                    validSpaces.Add(RightLastAvailable());
+                    break;
+                default:
+                    break;
+            }
         }
 
-        switch (relativeBackAvailability)
+        if (back)
         {
-            case SideSpace.All:
-                validSpaces.Add(BackFirstAvailable());
-                validSpaces.Add(BackLastAvailable());
-                validSpaces.AddRange(BackInnerAvailable());
-                break;
-            case SideSpace.First:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(BackLastAvailable());
-                }
-                else
-                {
+            switch (relativeBackAvailability)
+            {
+                case SideSpace.All:
                     validSpaces.Add(BackFirstAvailable());
-                }
-                break;
-            case SideSpace.Last:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(BackFirstAvailable());
-                }
-                else
-                {
                     validSpaces.Add(BackLastAvailable());
-                }
-                break;
-            case SideSpace.Inner:
-                validSpaces.AddRange(BackInnerAvailable());
-                break;
-            case SideSpace.Outer:
-                validSpaces.Add(BackFirstAvailable());
-                validSpaces.Add(BackLastAvailable());
-                break;
-            default:
-                break;
+                    validSpaces.AddRange(BackInnerAvailable());
+                    break;
+                case SideSpace.First:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(BackLastAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(BackFirstAvailable());
+                    }
+                    break;
+                case SideSpace.Last:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(BackFirstAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(BackLastAvailable());
+                    }
+                    break;
+                case SideSpace.Inner:
+                    validSpaces.AddRange(BackInnerAvailable());
+                    break;
+                case SideSpace.Outer:
+                    validSpaces.Add(BackFirstAvailable());
+                    validSpaces.Add(BackLastAvailable());
+                    break;
+                default:
+                    break;
+            }
         }
 
-        switch (relativeFrontAvailability)
+        if (front)
         {
-            case SideSpace.All:
-                validSpaces.Add(FrontFirstAvailable());
-                validSpaces.Add(FrontLastAvailable());
-                validSpaces.AddRange(FrontInnerAvailable());
-                break;
-            case SideSpace.First:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(FrontLastAvailable());
-                }
-                else
-                {
+            switch (relativeFrontAvailability)
+            {
+                case SideSpace.All:
                     validSpaces.Add(FrontFirstAvailable());
-                }
-                break;
-            case SideSpace.Last:
-                if (rotation > 90)
-                {
-                    validSpaces.Add(FrontFirstAvailable());
-                }
-                else
-                {
                     validSpaces.Add(FrontLastAvailable());
-                }
-                break;
-            case SideSpace.Inner:
-                validSpaces.AddRange(FrontInnerAvailable());
-                break;
-            case SideSpace.Outer:
-                validSpaces.Add(FrontFirstAvailable());
-                validSpaces.Add(FrontLastAvailable());
-                break;
-            default:
-                break;
+                    validSpaces.AddRange(FrontInnerAvailable());
+                    break;
+                case SideSpace.First:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(FrontLastAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(FrontFirstAvailable());
+                    }
+                    break;
+                case SideSpace.Last:
+                    if (rotation > 90)
+                    {
+                        validSpaces.Add(FrontFirstAvailable());
+                    }
+                    else
+                    {
+                        validSpaces.Add(FrontLastAvailable());
+                    }
+                    break;
+                case SideSpace.Inner:
+                    validSpaces.AddRange(FrontInnerAvailable());
+                    break;
+                case SideSpace.Outer:
+                    validSpaces.Add(FrontFirstAvailable());
+                    validSpaces.Add(FrontLastAvailable());
+                    break;
+                default:
+                    break;
+            }
         }
 
         return validSpaces;
@@ -657,5 +708,52 @@ public class Furniture : MonoBehaviour
         float centerZ = (origin.z + RotatedZLength() - 1) / 2;
 
         return new Vector3(centerX, 0f, centerZ);
+    }
+
+    private Dictionary<Side, bool> RelativePreferences(Furniture childFurniture)
+    {
+        Dictionary<Side, bool> preferences;
+
+        switch (rotation)
+        {
+            case 90f:
+                preferences = new Dictionary<Side, bool>(){
+                    { Side.Front, childFurniture.preferRight},
+                    { Side.Back, childFurniture.preferLeft},
+                    { Side.Left, childFurniture.preferBack},
+                    { Side.Right, childFurniture.preferFront},
+                    { Side.Corner, childFurniture.preferCorner},
+                };
+                break;
+            case 180f:
+                preferences = new Dictionary<Side, bool>(){
+                    { Side.Front, childFurniture.preferBack},
+                    { Side.Back, childFurniture.preferFront},
+                    { Side.Left, childFurniture.preferRight},
+                    { Side.Right, childFurniture.preferLeft},
+                    { Side.Corner, childFurniture.preferCorner},
+                };
+                break;
+            case 270f:
+                preferences = new Dictionary<Side, bool>(){
+                    { Side.Front, childFurniture.preferLeft},
+                    { Side.Back, childFurniture.preferRight},
+                    { Side.Left, childFurniture.preferFront},
+                    { Side.Right, childFurniture.preferBack},
+                    { Side.Corner, childFurniture.preferCorner},
+                };
+                break;
+            default:
+                preferences = new Dictionary<Side, bool>(){
+                { Side.Front, childFurniture.preferFront},
+                { Side.Back, childFurniture.preferBack},
+                { Side.Left, childFurniture.preferLeft},
+                { Side.Right, childFurniture.preferRight},
+                { Side.Corner, childFurniture.preferCorner},
+            };
+                break;
+        }
+
+        return preferences;
     }
 }

@@ -26,6 +26,7 @@ public class FurniturePlacer : MonoBehaviour
         {
             Destroy(item.gameObject);
         }
+
         placedFurniture.Clear();
 
         random = new System.Random();
@@ -50,7 +51,18 @@ public class FurniturePlacer : MonoBehaviour
                     // find piece of furniture with free spaces
                     tempFurniture = placedFurniture.FindAll(item.FindDependantFurniture);
                     int furnitureIndex = random.Next(tempFurniture.Count);
-                    tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces().FindAll(FindFurnitureSpaces);
+
+                    // find spaces that are on furnitures preferred parent side
+                    tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces(item).FindAll(FindFurnitureSpaces);
+                    if (item.type == FurnitureType.Chair)
+                    {
+                        Debug.Log("====================");
+                        tempCoordinates.ForEach((Vector3 space) =>
+                        {
+                            Debug.Log(space);
+                        });
+                    }
+
                     if (tempCoordinates.Count == 0) continue;
 
                     position = RandomPosition(tempCoordinates);
