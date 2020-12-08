@@ -125,7 +125,7 @@ public class FurniturePlacer : MonoBehaviour
     private void RemoveFurnitureCoords(Furniture furniture, Vector3 origin)
     {
         Vector3 bottomLeftCoord = furniture.RotatedBottomLeft(origin);
-        List<Vector3> nonoSpaces = furniture.NoNoSpaces();
+        List<Vector3> reservedSpaces = furniture.ReservedSpaces();
 
         // remove actual furniture spaces
         for (float x = 0; x < furniture.RotatedXLength(); x++)
@@ -140,7 +140,7 @@ public class FurniturePlacer : MonoBehaviour
         // remove surrounding invalid spaces
         gridCoordinates.RemoveAll((Vector3 coord) =>
         {
-            return nonoSpaces.Contains(coord);
+            return reservedSpaces.Contains(coord);
         });
     }
 

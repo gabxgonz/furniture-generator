@@ -103,7 +103,7 @@ public class Furniture : MonoBehaviour
         }
 
         Gizmos.color = Color.red;
-        foreach (var item in NoNoSpaces())
+        foreach (var item in ReservedSpaces())
         {
             Gizmos.DrawSphere(item, 0.1f);
         }
@@ -241,34 +241,34 @@ public class Furniture : MonoBehaviour
         return false;
     }
 
-    public List<Vector3> NoNoSpaces()
+    public List<Vector3> ReservedSpaces()
     {
-        List<Vector3> noNoSpaces = new List<Vector3>();
+        List<Vector3> reservedSpaces = new List<Vector3>();
         List<Vector3> depSpaces = DependencySpaces();
 
-        noNoSpaces.Add(FrontLeftAvailable());
-        noNoSpaces.Add(FrontRightAvailable());
-        noNoSpaces.Add(BackLeftAvailable());
-        noNoSpaces.Add(BackRightAvailable());
-        noNoSpaces.Add(LeftFirstAvailable());
-        noNoSpaces.Add(LeftLastAvailable());
-        noNoSpaces.AddRange(LeftInnerAvailable());
-        noNoSpaces.Add(RightFirstAvailable());
-        noNoSpaces.Add(RightLastAvailable());
-        noNoSpaces.AddRange(RightInnerAvailable());
-        noNoSpaces.Add(BackFirstAvailable());
-        noNoSpaces.Add(BackLastAvailable());
-        noNoSpaces.AddRange(BackInnerAvailable());
-        noNoSpaces.Add(FrontFirstAvailable());
-        noNoSpaces.Add(FrontLastAvailable());
-        noNoSpaces.AddRange(FrontInnerAvailable());
+        reservedSpaces.Add(FrontLeftAvailable());
+        reservedSpaces.Add(FrontRightAvailable());
+        reservedSpaces.Add(BackLeftAvailable());
+        reservedSpaces.Add(BackRightAvailable());
+        reservedSpaces.Add(LeftFirstAvailable());
+        reservedSpaces.Add(LeftLastAvailable());
+        reservedSpaces.AddRange(LeftInnerAvailable());
+        reservedSpaces.Add(RightFirstAvailable());
+        reservedSpaces.Add(RightLastAvailable());
+        reservedSpaces.AddRange(RightInnerAvailable());
+        reservedSpaces.Add(BackFirstAvailable());
+        reservedSpaces.Add(BackLastAvailable());
+        reservedSpaces.AddRange(BackInnerAvailable());
+        reservedSpaces.Add(FrontFirstAvailable());
+        reservedSpaces.Add(FrontLastAvailable());
+        reservedSpaces.AddRange(FrontInnerAvailable());
 
-        noNoSpaces.RemoveAll((Vector3 coord) =>
+        reservedSpaces.RemoveAll((Vector3 coord) =>
         {
             return depSpaces.Contains(coord);
         });
 
-        return noNoSpaces;
+        return reservedSpaces;
     }
 
     public List<Vector3> DependencySpaces()
