@@ -38,22 +38,19 @@ public class FurniturePlacer : MonoBehaviour
 
             for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
             {
-                // if should align to walls
                 if (item.alignToWall)
                 {
                     // find all available walls (use find all walls)
                     tempCoordinates = gridCoordinates.FindAll(FindEdge);
                     position = RandomPosition(tempCoordinates);
                     item.rotation = GetRotationDegrees(position);
-                    // check if there's enough room when rotated according to wall
-                    // place furniture
                 }
                 else if (item.alignToFurniture)
                 {
                     // find piece of furniture with free spaces
                     tempFurniture = placedFurniture.FindAll(item.FindDependantFurniture);
                     int furnitureIndex = random.Next(tempFurniture.Count);
-                    tempCoordinates = tempFurniture[furnitureIndex].DependencySpaces().FindAll(FindFurnitureSpaces);
+                    tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces().FindAll(FindFurnitureSpaces);
                     if (tempCoordinates.Count == 0) continue;
 
                     position = RandomPosition(tempCoordinates);
@@ -70,8 +67,6 @@ public class FurniturePlacer : MonoBehaviour
                 {
                     selectedPosition = position;
                     item.origin = item.RotatedBottomLeft(selectedPosition);
-
-                    // Set Rotation before getting rotated origin
 
                     Furniture newFurniture = Instantiate(item, item.RotatedOrigin(selectedPosition), Quaternion.Euler(0f, item.rotation, 0f));
 
@@ -146,9 +141,6 @@ public class FurniturePlacer : MonoBehaviour
 
     private bool IsEnoughRoom(Furniture furniture, Vector3 origin)
     {
-        // update x & z with new furniture coords
-        // float xRotated =
-        // calculate origin relative to rotation
         Vector3 bottomLeftCoord = furniture.RotatedBottomLeft(origin);
 
         bool isWithinGridX = bottomLeftCoord.x + furniture.RotatedXLength() <= xLength;

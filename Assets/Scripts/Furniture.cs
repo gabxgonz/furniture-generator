@@ -64,7 +64,7 @@ public class Furniture : MonoBehaviour
     public bool backLeftAvailable = true;
     public bool backRightAvailable = true;
 
-    private List<Vector3> dependencySpaces;
+    private List<Vector3> validSpaces;
     private Vector3 backDependencyTranslation;
     private Vector3 leftDependencyTranslation;
     private Vector3 rightDependencyTranslation;
@@ -83,7 +83,7 @@ public class Furniture : MonoBehaviour
 
     void Start()
     {
-        dependencySpaces = new List<Vector3>();
+        validSpaces = new List<Vector3>();
     }
 
     void OnDrawGizmos()
@@ -97,7 +97,7 @@ public class Furniture : MonoBehaviour
     {
         Gizmos.color = Color.blue;
 
-        foreach (var item in DependencySpaces())
+        foreach (var item in ValidSpaces())
         {
             Gizmos.DrawSphere(item, 0.1f);
         }
@@ -244,7 +244,7 @@ public class Furniture : MonoBehaviour
     public List<Vector3> ReservedSpaces()
     {
         List<Vector3> reservedSpaces = new List<Vector3>();
-        List<Vector3> depSpaces = DependencySpaces();
+        List<Vector3> depSpaces = ValidSpaces();
 
         reservedSpaces.Add(FrontLeftAvailable());
         reservedSpaces.Add(FrontRightAvailable());
@@ -271,11 +271,11 @@ public class Furniture : MonoBehaviour
         return reservedSpaces;
     }
 
-    public List<Vector3> DependencySpaces()
+    public List<Vector3> ValidSpaces()
     {
 
-        if (dependencySpaces != null) dependencySpaces.Clear();
-        if (dependencySpaces == null) dependencySpaces = new List<Vector3>();
+        if (validSpaces != null) validSpaces.Clear();
+        if (validSpaces == null) validSpaces = new List<Vector3>();
 
         backDependencyTranslation = new Vector3(0f, 0f, -1f);
         leftDependencyTranslation = new Vector3(-1f, 0f, 0f);
@@ -288,44 +288,44 @@ public class Furniture : MonoBehaviour
         SetRelativeAvailability();
 
         // Add corners
-        if (relativeFrontLeftAvailable) dependencySpaces.Add(FrontLeftAvailable());
-        if (relativeFrontRightAvailable) dependencySpaces.Add(FrontRightAvailable());
-        if (relativeBackLeftAvailable) dependencySpaces.Add(BackLeftAvailable());
-        if (relativeBackRightAvailable) dependencySpaces.Add(BackRightAvailable());
+        if (relativeFrontLeftAvailable) validSpaces.Add(FrontLeftAvailable());
+        if (relativeFrontRightAvailable) validSpaces.Add(FrontRightAvailable());
+        if (relativeBackLeftAvailable) validSpaces.Add(BackLeftAvailable());
+        if (relativeBackRightAvailable) validSpaces.Add(BackRightAvailable());
 
         switch (relativeLeftAvailability)
         {
             case SideSpace.All:
-                dependencySpaces.Add(LeftFirstAvailable());
-                dependencySpaces.Add(LeftLastAvailable());
-                dependencySpaces.AddRange(LeftInnerAvailable());
+                validSpaces.Add(LeftFirstAvailable());
+                validSpaces.Add(LeftLastAvailable());
+                validSpaces.AddRange(LeftInnerAvailable());
                 break;
             case SideSpace.First:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(LeftLastAvailable());
+                    validSpaces.Add(LeftLastAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(LeftFirstAvailable());
+                    validSpaces.Add(LeftFirstAvailable());
                 }
                 break;
             case SideSpace.Last:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(LeftFirstAvailable());
+                    validSpaces.Add(LeftFirstAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(LeftLastAvailable());
+                    validSpaces.Add(LeftLastAvailable());
                 }
                 break;
             case SideSpace.Inner:
-                dependencySpaces.AddRange(LeftInnerAvailable());
+                validSpaces.AddRange(LeftInnerAvailable());
                 break;
             case SideSpace.Outer:
-                dependencySpaces.Add(LeftFirstAvailable());
-                dependencySpaces.Add(LeftLastAvailable());
+                validSpaces.Add(LeftFirstAvailable());
+                validSpaces.Add(LeftLastAvailable());
                 break;
             default:
                 break;
@@ -334,36 +334,36 @@ public class Furniture : MonoBehaviour
         switch (relativeRightAvailability)
         {
             case SideSpace.All:
-                dependencySpaces.Add(RightFirstAvailable());
-                dependencySpaces.Add(RightLastAvailable());
-                dependencySpaces.AddRange(RightInnerAvailable());
+                validSpaces.Add(RightFirstAvailable());
+                validSpaces.Add(RightLastAvailable());
+                validSpaces.AddRange(RightInnerAvailable());
                 break;
             case SideSpace.First:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(RightLastAvailable());
+                    validSpaces.Add(RightLastAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(RightFirstAvailable());
+                    validSpaces.Add(RightFirstAvailable());
                 }
                 break;
             case SideSpace.Last:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(RightFirstAvailable());
+                    validSpaces.Add(RightFirstAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(RightLastAvailable());
+                    validSpaces.Add(RightLastAvailable());
                 }
                 break;
             case SideSpace.Inner:
-                dependencySpaces.AddRange(RightInnerAvailable());
+                validSpaces.AddRange(RightInnerAvailable());
                 break;
             case SideSpace.Outer:
-                dependencySpaces.Add(RightFirstAvailable());
-                dependencySpaces.Add(RightLastAvailable());
+                validSpaces.Add(RightFirstAvailable());
+                validSpaces.Add(RightLastAvailable());
                 break;
             default:
                 break;
@@ -372,36 +372,36 @@ public class Furniture : MonoBehaviour
         switch (relativeBackAvailability)
         {
             case SideSpace.All:
-                dependencySpaces.Add(BackFirstAvailable());
-                dependencySpaces.Add(BackLastAvailable());
-                dependencySpaces.AddRange(BackInnerAvailable());
+                validSpaces.Add(BackFirstAvailable());
+                validSpaces.Add(BackLastAvailable());
+                validSpaces.AddRange(BackInnerAvailable());
                 break;
             case SideSpace.First:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(BackLastAvailable());
+                    validSpaces.Add(BackLastAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(BackFirstAvailable());
+                    validSpaces.Add(BackFirstAvailable());
                 }
                 break;
             case SideSpace.Last:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(BackFirstAvailable());
+                    validSpaces.Add(BackFirstAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(BackLastAvailable());
+                    validSpaces.Add(BackLastAvailable());
                 }
                 break;
             case SideSpace.Inner:
-                dependencySpaces.AddRange(BackInnerAvailable());
+                validSpaces.AddRange(BackInnerAvailable());
                 break;
             case SideSpace.Outer:
-                dependencySpaces.Add(BackFirstAvailable());
-                dependencySpaces.Add(BackLastAvailable());
+                validSpaces.Add(BackFirstAvailable());
+                validSpaces.Add(BackLastAvailable());
                 break;
             default:
                 break;
@@ -410,42 +410,42 @@ public class Furniture : MonoBehaviour
         switch (relativeFrontAvailability)
         {
             case SideSpace.All:
-                dependencySpaces.Add(FrontFirstAvailable());
-                dependencySpaces.Add(FrontLastAvailable());
-                dependencySpaces.AddRange(FrontInnerAvailable());
+                validSpaces.Add(FrontFirstAvailable());
+                validSpaces.Add(FrontLastAvailable());
+                validSpaces.AddRange(FrontInnerAvailable());
                 break;
             case SideSpace.First:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(FrontLastAvailable());
+                    validSpaces.Add(FrontLastAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(FrontFirstAvailable());
+                    validSpaces.Add(FrontFirstAvailable());
                 }
                 break;
             case SideSpace.Last:
                 if (rotation > 90)
                 {
-                    dependencySpaces.Add(FrontFirstAvailable());
+                    validSpaces.Add(FrontFirstAvailable());
                 }
                 else
                 {
-                    dependencySpaces.Add(FrontLastAvailable());
+                    validSpaces.Add(FrontLastAvailable());
                 }
                 break;
             case SideSpace.Inner:
-                dependencySpaces.AddRange(FrontInnerAvailable());
+                validSpaces.AddRange(FrontInnerAvailable());
                 break;
             case SideSpace.Outer:
-                dependencySpaces.Add(FrontFirstAvailable());
-                dependencySpaces.Add(FrontLastAvailable());
+                validSpaces.Add(FrontFirstAvailable());
+                validSpaces.Add(FrontLastAvailable());
                 break;
             default:
                 break;
         }
 
-        return dependencySpaces;
+        return validSpaces;
     }
 
     private Vector3 LeftFirstAvailable()
