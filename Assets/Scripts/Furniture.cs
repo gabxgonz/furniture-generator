@@ -10,7 +10,11 @@ public enum FurnitureType
     Table,
     Bed,
     Lamp,
-    Desk
+    Desk,
+    Counter,
+    CornerItem,
+    Wall,
+    WallCorner
 }
 
 public enum SideSpace
@@ -48,15 +52,13 @@ public class Furniture : MonoBehaviour
     public FurnitureType type = FurnitureType.Null;
     public int xLength = 1;
     public int zLength = 1;
-    public bool alignToWall = false;
-    public bool alignToFurniture = false;
     [HideInInspector] public float rotation = 0f;
     [HideInInspector] public Vector3 origin = Vector3.zero;
 
 
     [Header("Parent Furniture")]
     public FacingDirection relativeLookDirection = FacingDirection.Forward;
-    public List<FurnitureType> relatedFurniture;
+    public List<FurnitureType> alignTo;
 
     [Header("Parent Side Preference")]
     public bool preferFront = true;
@@ -257,7 +259,7 @@ public class Furniture : MonoBehaviour
 
     public bool FindDependantFurniture(Furniture furniture)
     {
-        if (relatedFurniture.Contains(furniture.type)) return true;
+        if (alignTo.Contains(furniture.type)) return true;
         return false;
     }
 

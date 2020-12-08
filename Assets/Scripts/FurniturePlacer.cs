@@ -39,14 +39,25 @@ public class FurniturePlacer : MonoBehaviour
 
             for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
             {
-                if (item.alignToWall)
+                if (item.alignTo.Count == 0)
+                {
+                    position = RandomPosition(gridCoordinates);
+                }
+                else if (item.alignTo.Contains(FurnitureType.Wall))
                 {
                     // find all available walls (use find all walls)
                     tempCoordinates = gridCoordinates.FindAll(FindEdge);
                     position = RandomPosition(tempCoordinates);
                     item.rotation = GetRotationDegrees(position);
                 }
-                else if (item.alignToFurniture)
+                else if (item.alignTo.Contains(FurnitureType.WallCorner))
+                {
+                    // find all available walls (use find all walls)
+                    tempCoordinates = gridCoordinates.FindAll(FindCorner);
+                    position = RandomPosition(tempCoordinates);
+                    item.rotation = GetRotationDegrees(position);
+                }
+                else
                 {
                     // find piece of furniture with free spaces
                     tempFurniture = placedFurniture.FindAll(item.FindDependantFurniture);
@@ -56,7 +67,6 @@ public class FurniturePlacer : MonoBehaviour
                     tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces(item).FindAll(FindFurnitureSpaces);
                     if (item.type == FurnitureType.Chair)
                     {
-                        Debug.Log("====================");
                         tempCoordinates.ForEach((Vector3 space) =>
                         {
                             Debug.Log(space);
@@ -67,10 +77,6 @@ public class FurniturePlacer : MonoBehaviour
 
                     position = RandomPosition(tempCoordinates);
                     item.SetParentRelativeRotation(position, tempFurniture[furnitureIndex]);
-                }
-                else
-                {
-                    position = RandomPosition(gridCoordinates);
                 }
 
                 bool isEnoughRoom = IsEnoughRoom(item, position);
@@ -119,12 +125,15 @@ public class FurniturePlacer : MonoBehaviour
     private float GetRotationDegrees(Vector3 position)
     {
         float rotation = 0f;
-
+        // Wall
         if (position.x == 0) rotation = 90f;
-
         if (position.z == zLength - 1) rotation = 180f;
-
         if (position.x == xLength - 1) rotation = 270f;
+        // Corners
+        if (position.x == 0 && position.z == 0) rotation = 0f;
+        if (position.x == 0 && position.z == zLength - 1) rotation = 90f;
+        if (position.x == xLength - 1 && position.z == zLength - 1) rotation = 180f;
+        if (position.x == xLength - 1 && position.z == 0) rotation = 270f;
 
         return rotation;
     }
@@ -184,6 +193,16 @@ public class FurniturePlacer : MonoBehaviour
         {
             return true;
         }
+
+        return false;
+    }
+
+    private bool FindCorner(Vector3 coord)
+    {
+        bool leftCorner = coord.x == 0 && (coord.z == 0 || coord.z == zLength - 1);
+        bool rightCorner = coord.x == xLength - 1 && (coord.z == 0 || coord.z == zLength - 1);
+
+        if (leftCorner || rightCorner) return true;
 
         return false;
     }
