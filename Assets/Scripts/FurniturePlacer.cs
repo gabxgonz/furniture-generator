@@ -13,16 +13,6 @@ public class FurniturePlacer : MonoBehaviour
     private List<Furniture> tempFurniture;
     private System.Random random;
 
-    public Dictionary<FurnitureType, int> counts = new Dictionary<FurnitureType, int>(){
-        {FurnitureType.Chair, 20},
-        { FurnitureType.Couch, 20},
-        { FurnitureType.Table, 20},
-        { FurnitureType.Bed, 20},
-        { FurnitureType.Lamp, 20},
-        { FurnitureType.Desk, 20}
-    };
-
-    // Start is called before the first frame update
     void Start()
     {
         placedFurniture = new List<Furniture>();
@@ -43,59 +33,55 @@ public class FurniturePlacer : MonoBehaviour
 
         foreach (Furniture item in furniture)
         {
-            for (int i = 0; i < counts[item.type]; i++)
+            Vector3 selectedPosition;
+            Vector3 position;
+
+            for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
             {
-
-                Vector3 selectedPosition;
-                Vector3 position;
-
-                for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
+                // if should align to walls
+                if (item.alignToWall)
                 {
-                    // if should align to walls
-                    if (item.alignToWall)
-                    {
-                        // find all available walls (use find all walls)
-                        tempCoordinates = gridCoordinates.FindAll(FindEdge);
-                        position = RandomPosition(tempCoordinates);
-                        item.rotation = GetRotationDegrees(position);
-                        // check if there's enough room when rotated according to wall
-                        // place furniture
-                    }
-                    else if (item.alignToFurniture)
-                    {
-                        // find piece of furniture with free spaces
-                        tempFurniture = placedFurniture.FindAll(item.FindDependantFurniture);
-                        int furnitureIndex = random.Next(tempFurniture.Count);
-                        tempCoordinates = tempFurniture[furnitureIndex].DependencySpaces().FindAll(FindFurnitureSpaces);
-                        if (tempCoordinates.Count == 0) continue;
-
-                        position = RandomPosition(tempCoordinates);
-                        item.SetParentRelativeRotation(position, tempFurniture[furnitureIndex]);
-                    }
-                    else
-                    {
-                        position = RandomPosition(gridCoordinates);
-                    }
-
-                    bool isEnoughRoom = IsEnoughRoom(item, position);
-
-                    if (isEnoughRoom)
-                    {
-                        selectedPosition = position;
-                        item.origin = item.RotatedBottomLeft(selectedPosition);
-
-                        // Set Rotation before getting rotated origin
-
-                        Furniture newFurniture = Instantiate(item, item.RotatedOrigin(selectedPosition), Quaternion.Euler(0f, item.rotation, 0f));
-
-                        RemoveFurnitureCoords(item, selectedPosition);
-                        placedFurniture.Add(newFurniture);
-                        break;
-                    }
-
-                    if (placementAttempt == 9) Debug.Log("No room for furniture: " + item);
-                    continue;
+                    // find all available walls (use find all walls)
+                    tempCoordinates = gridCoordinates.FindAll(FindEdge);
+                    position = RandomPosition(tempCoordinates);
+                    item.rotation = GetRotationDegrees(position);
+                    // check if there's enough room when rotated according to wall
+                    // place furniture
                 }
+                else if (item.alignToFurniture)
+                {
+                    // find piece of furniture with free spaces
+                    tempFurniture = placedFurniture.FindAll(item.FindDependantFurniture);
+                    int furnitureIndex = random.Next(tempFurniture.Count);
+                    tempCoordinates = tempFurniture[furnitureIndex].DependencySpaces().FindAll(FindFurnitureSpaces);
+                    if (tempCoordinates.Count == 0) continue;
+
+                    position = RandomPosition(tempCoordinates);
+                    item.SetParentRelativeRotation(position, tempFurniture[furnitureIndex]);
+                }
+                else
+                {
+                    position = RandomPosition(gridCoordinates);
+                }
+
+                bool isEnoughRoom = IsEnoughRoom(item, position);
+
+                if (isEnoughRoom)
+                {
+                    selectedPosition = position;
+                    item.origin = item.RotatedBottomLeft(selectedPosition);
+
+                    // Set Rotation before getting rotated origin
+
+                    Furniture newFurniture = Instantiate(item, item.RotatedOrigin(selectedPosition), Quaternion.Euler(0f, item.rotation, 0f));
+
+                    RemoveFurnitureCoords(item, selectedPosition);
+                    placedFurniture.Add(newFurniture);
+                    break;
+                }
+
+                if (placementAttempt == 9) Debug.Log("No room for furniture: " + item);
+                continue;
             }
         }
     }

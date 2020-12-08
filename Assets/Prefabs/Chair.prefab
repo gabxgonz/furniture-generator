@@ -48,9 +48,9 @@ MonoBehaviour:
   xLength: 1
   zLength: 1
   alignToWall: 0
-  alignToFurniture: 0
+  alignToFurniture: 1
   rotation: 0
-  origin: {x: 0, y: 0, z: 7}
+  origin: {x: 2, y: 0, z: 2}
   relativeLookDirection: 0
   relatedFurniture: 0300000006000000
   frontAvailability: 1
