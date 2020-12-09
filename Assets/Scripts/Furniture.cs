@@ -7,6 +7,7 @@ public enum FurnitureType
     Null,
     Chair,
     Couch,
+    Door,
     Table,
     Bed,
     Lamp,
@@ -176,30 +177,55 @@ public class Furniture : MonoBehaviour
         return rotatedZ;
     }
 
-    public Vector3 RotatedOrigin(Vector3 initialOrigin)
+    public Vector3 WorldOrigin(Vector3 gridOrigin)
     {
+        Vector3 worldOrigin = gridOrigin;
+
         switch (rotation)
         {
             case 90f:
-                initialOrigin.z += 1f;
+                worldOrigin.z += 1f;
                 break;
             case 180f:
-                initialOrigin.x += 1f;
-                initialOrigin.z += 1f;
+                worldOrigin.x += 1f;
+                worldOrigin.z += 1f;
                 break;
             case 270f:
-                initialOrigin.x += 1f;
+                worldOrigin.x += 1f;
                 break;
             default:
                 break;
         }
 
-        return initialOrigin;
+        return worldOrigin;
+    }
+
+    public Vector3 GridOrigin(Vector3 worldOrigin)
+    {
+        Vector3 gridOrigin = worldOrigin;
+
+        switch (rotation)
+        {
+            case 90f:
+                gridOrigin.z -= 1f;
+                break;
+            case 180f:
+                gridOrigin.x -= 1f;
+                gridOrigin.z -= 1f;
+                break;
+            case 270f:
+                gridOrigin.x -= 1f;
+                break;
+            default:
+                break;
+        }
+
+        return gridOrigin;
     }
 
     public Vector3 RotatedBottomLeft(Vector3 initialOrigin)
     {
-        Vector3 rotatedOrigin = RotatedOrigin(initialOrigin);
+        Vector3 rotatedOrigin = WorldOrigin(initialOrigin);
 
         switch (rotation)
         {

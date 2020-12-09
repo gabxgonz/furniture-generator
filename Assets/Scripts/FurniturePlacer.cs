@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class FurniturePlacer : MonoBehaviour
 {
-    [SerializeField] private List<Furniture> furniture;
+    [SerializeField] private List<Furniture> randomFurniture;
+    [SerializeField] private List<Furniture> staticFurniture;
     [SerializeField] private int xLength = 1;
     [SerializeField] private int zLength = 1;
     public bool debugMode = false;
@@ -22,17 +23,21 @@ public class FurniturePlacer : MonoBehaviour
 
     public void RearrangeFurniture()
     {
-        foreach (Furniture item in placedFurniture)
-        {
-            Destroy(item.gameObject);
-        }
 
-        placedFurniture.Clear();
+        foreach (Furniture item in placedFurniture.ToArray())
+        {
+            if (!staticFurniture.Contains(item))
+            {
+                placedFurniture.Remove(item);
+                Destroy(item.gameObject);
+            }
+        }
 
         random = new System.Random();
         gridCoordinates = BuildCoordinates();
+        RegisterStaticFurniture();
 
-        foreach (Furniture item in furniture)
+        foreach (Furniture item in randomFurniture)
         {
             Vector3 selectedPosition;
             Vector3 position;
@@ -47,6 +52,7 @@ public class FurniturePlacer : MonoBehaviour
                 {
                     // find all available walls (use find all walls)
                     tempCoordinates = gridCoordinates.FindAll(FindEdge);
+                    // TODO: guard when tempCoordinates are empty
                     position = RandomPosition(tempCoordinates);
                     item.rotation = GetRotationDegrees(position);
                 }
@@ -65,13 +71,6 @@ public class FurniturePlacer : MonoBehaviour
 
                     // find spaces that are on furnitures preferred parent side
                     tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces(item).FindAll(FindFurnitureSpaces);
-                    if (item.type == FurnitureType.Chair)
-                    {
-                        tempCoordinates.ForEach((Vector3 space) =>
-                        {
-                            Debug.Log(space);
-                        });
-                    }
 
                     if (tempCoordinates.Count == 0) continue;
 
@@ -86,16 +85,35 @@ public class FurniturePlacer : MonoBehaviour
                     selectedPosition = position;
                     item.origin = item.RotatedBottomLeft(selectedPosition);
 
-                    Furniture newFurniture = Instantiate(item, item.RotatedOrigin(selectedPosition), Quaternion.Euler(0f, item.rotation, 0f));
+                    Furniture newFurniture = Instantiate(item, item.WorldOrigin(selectedPosition), Quaternion.Euler(0f, item.rotation, 0f));
 
-                    RemoveFurnitureCoords(item, selectedPosition);
-                    placedFurniture.Add(newFurniture);
+                    AddToGrid(newFurniture);
                     break;
                 }
 
                 if (placementAttempt == 9) Debug.Log("No room for furniture: " + item);
                 continue;
             }
+        }
+    }
+
+    private void RegisterStaticFurniture()
+    {
+        foreach (Furniture furniture in staticFurniture)
+        {
+            Vector3 originalPosition = furniture.transform.position;
+            Vector3 position;
+
+            // align furniture to grid
+            position = new Vector3(Mathf.Round(originalPosition.x), 0f, Mathf.Round(originalPosition.z));
+            furniture.transform.position = position;
+
+            // set rotation to support furniture internal calculations
+            furniture.rotation = 90 * Mathf.Floor(furniture.transform.rotation.eulerAngles.y / 90);
+            // set furniture origin
+            furniture.origin = furniture.GridOrigin(position);
+
+            AddToGrid(furniture);
         }
     }
 
@@ -138,9 +156,9 @@ public class FurniturePlacer : MonoBehaviour
         return rotation;
     }
 
-    private void RemoveFurnitureCoords(Furniture furniture, Vector3 origin)
+    private void RemoveFurnitureCoords(Furniture furniture)
     {
-        Vector3 bottomLeftCoord = furniture.RotatedBottomLeft(origin);
+        Vector3 bottomLeftCoord = furniture.origin;
         List<Vector3> reservedSpaces = furniture.ReservedSpaces();
 
         // remove actual furniture spaces
@@ -212,6 +230,12 @@ public class FurniturePlacer : MonoBehaviour
         if (gridCoordinates.Contains(coord)) return true;
 
         return false;
+    }
+
+    private void AddToGrid(Furniture furniture)
+    {
+        RemoveFurnitureCoords(furniture);
+        placedFurniture.Add(furniture);
     }
 }
 
