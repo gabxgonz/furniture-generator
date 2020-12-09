@@ -5,10 +5,12 @@ public class FurniturePlacer : MonoBehaviour
 {
     [SerializeField] private List<Furniture> randomFurniture;
     [SerializeField] private List<Furniture> staticFurniture;
+    [SerializeField] private List<Decoration> decorations;
     [SerializeField] private int xLength = 1;
     [SerializeField] private int zLength = 1;
     public bool debugMode = false;
     private List<Furniture> placedFurniture;
+    private List<Decoration> placedDecorations;
     private List<Vector3> gridCoordinates;
     private List<Vector3> tempCoordinates;
     private List<Furniture> tempFurniture;
@@ -17,6 +19,7 @@ public class FurniturePlacer : MonoBehaviour
     void Start()
     {
         placedFurniture = new List<Furniture>();
+        placedDecorations = new List<Decoration>();
         tempCoordinates = new List<Vector3>();
         RearrangeFurniture();
     }
@@ -94,6 +97,35 @@ public class FurniturePlacer : MonoBehaviour
                 if (placementAttempt == 9) Debug.Log("No room for furniture: " + item);
                 continue;
             }
+        }
+
+        PlaceDecorations();
+    }
+
+    private void PlaceDecorations()
+    {
+        foreach (Decoration decoration in placedDecorations)
+        {
+            Destroy(decoration.gameObject);
+        }
+        placedDecorations.Clear();
+
+        // for each dcoreation
+        foreach (Decoration decoration in decorations)
+        {
+            // find dependent furnitures that aren't decorated
+            tempFurniture = placedFurniture.FindAll((Furniture furniture) =>
+            {
+                return furniture.decorationSpaces.Count > 0 && decoration.parentFurniture.Contains(furniture.type);
+            });
+            // select one of them
+            int index = random.Next(tempFurniture.Count);
+            Furniture selectedFurniture = tempFurniture[index];
+            index = random.Next(selectedFurniture.decorationSpaces.Count);
+            Transform decorationPosition = selectedFurniture.decorationSpaces[index];
+            selectedFurniture.decorationSpaces.RemoveAt(index);
+            // place instance
+            placedDecorations.Add(Instantiate(decoration, decorationPosition.position, selectedFurniture.transform.rotation));
         }
     }
 

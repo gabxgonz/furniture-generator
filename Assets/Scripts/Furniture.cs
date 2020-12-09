@@ -87,6 +87,8 @@ public class Furniture : MonoBehaviour
     [Tooltip("Define spaces available for dependant furniture placement on back right corner.")]
     public bool backRightAvailable = true;
 
+    public List<Transform> decorationSpaces;
+
     private List<Vector3> validSpaces;
     private Vector3 backDependencyTranslation;
     private Vector3 leftDependencyTranslation;
@@ -130,6 +132,7 @@ public class Furniture : MonoBehaviour
         {
             Gizmos.DrawSphere(item, 0.1f);
         }
+
     }
 
     void FixedUpdate()
