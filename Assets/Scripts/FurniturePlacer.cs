@@ -72,6 +72,7 @@ public class FurniturePlacer : MonoBehaviour
                     tempFurniture = placedFurniture.FindAll(item.FindDependantFurniture);
                     int furnitureIndex = random.Next(tempFurniture.Count);
 
+                    if (tempFurniture.Count == 0) continue;
                     // find spaces that are on furnitures preferred parent side
                     tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces(item).FindAll(FindFurnitureSpaces);
 
@@ -119,12 +120,18 @@ public class FurniturePlacer : MonoBehaviour
                 return furniture.decorationSpaces.Count > 0 && decoration.parentFurniture.Contains(furniture.type);
             });
             // select one of them
+            if (tempFurniture.Count == 0)
+            {
+                continue;
+            }
+
             int index = random.Next(tempFurniture.Count);
             Furniture selectedFurniture = tempFurniture[index];
             index = random.Next(selectedFurniture.decorationSpaces.Count);
             Transform decorationPosition = selectedFurniture.decorationSpaces[index];
             selectedFurniture.decorationSpaces.RemoveAt(index);
             // place instance
+            Debug.Log(decoration);
             placedDecorations.Add(Instantiate(decoration, decorationPosition.position, selectedFurniture.transform.rotation));
         }
     }

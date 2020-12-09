@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1553148279748786720}
   - component: {fileID: 57876917914028860}
   m_Layer: 0
-  m_Name: Laptop 1
+  m_Name: Laptop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d416d3c1bbbd45e5ab105c43921d135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentFurniture: 07000000
+  parentFurniture: 07000000050000000a000000
 --- !u!1 &3911464198993637844
 GameObject:
   m_ObjectHideFlags: 0

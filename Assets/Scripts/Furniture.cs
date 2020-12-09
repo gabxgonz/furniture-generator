@@ -4,16 +4,17 @@ using UnityEngine;
 
 public enum FurnitureType
 {
-    Null,
-    Chair,
-    Couch,
-    Door,
-    Table,
     Bed,
-    Lamp,
-    Desk,
-    Counter,
+    Chair,
     CornerItem,
+    Couch,
+    Counter,
+    Desk,
+    Door,
+    EndTable,
+    Lamp,
+    Null,
+    Table,
     Wall,
     WallCorner
 }

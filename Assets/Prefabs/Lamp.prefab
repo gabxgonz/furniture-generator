@@ -137,13 +137,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf991915c716d4bf89ccb7f707b7e228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
+  type: 8
   xLength: 1
   zLength: 1
   rotation: 0
   origin: {x: 7, y: 0, z: 4}
   relativeLookDirection: 2
-  alignTo: 020000000600000007000000
+  alignTo: 000000000300000005000000
   preferFront: 0
   preferBack: 0
   preferLeft: 1
@@ -157,6 +157,7 @@ MonoBehaviour:
   frontRightAvailable: 1
   backLeftAvailable: 1
   backRightAvailable: 1
+  decorationSpaces: []
 --- !u!1001 &1196163214716369140
 PrefabInstance:
   m_ObjectHideFlags: 0

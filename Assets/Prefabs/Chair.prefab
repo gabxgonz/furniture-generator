@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3435542958152095350
+--- !u!1 &1064756300766459409
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3887098214072010890}
-  - component: {fileID: 7151595254954838089}
+  - component: {fileID: 1484772890528868589}
+  - component: {fileID: 4779682421693540398}
   m_Layer: 0
   m_Name: Chair
   m_TagString: Untagged
@@ -17,28 +17,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3887098214072010890
+--- !u!4 &1484772890528868589
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3435542958152095350}
+  m_GameObject: {fileID: 1064756300766459409}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2096615074720050096}
+  - {fileID: 4356082987325049815}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7151595254954838089
+--- !u!114 &4779682421693540398
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3435542958152095350}
+  m_GameObject: {fileID: 1064756300766459409}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf991915c716d4bf89ccb7f707b7e228, type: 3}
@@ -50,11 +50,11 @@ MonoBehaviour:
   rotation: 0
   origin: {x: 4, y: 0, z: 2}
   relativeLookDirection: 0
-  alignTo: 0300000006000000
+  alignTo: 0a000000
   preferFront: 1
   preferBack: 1
-  preferLeft: 0
-  preferRight: 0
+  preferLeft: 1
+  preferRight: 1
   preferCorner: 0
   frontAvailability: 1
   backAvailability: 0
@@ -64,12 +64,13 @@ MonoBehaviour:
   frontRightAvailable: 1
   backLeftAvailable: 1
   backRightAvailable: 1
---- !u!1001 &1914616088190487643
+  decorationSpaces: []
+--- !u!1001 &4321576683222903868
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 3887098214072010890}
+    m_TransformParent: {fileID: 1484772890528868589}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9000cd29bf4eb4b9984755d618a38ead, type: 3}
       propertyPath: m_RootOrder
@@ -125,8 +126,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9000cd29bf4eb4b9984755d618a38ead, type: 3}
---- !u!4 &2096615074720050096 stripped
+--- !u!4 &4356082987325049815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9000cd29bf4eb4b9984755d618a38ead, type: 3}
-  m_PrefabInstance: {fileID: 1914616088190487643}
+  m_PrefabInstance: {fileID: 4321576683222903868}
   m_PrefabAsset: {fileID: 0}
