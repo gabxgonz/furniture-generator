@@ -5,13 +5,17 @@ public class FurniturePlacer : MonoBehaviour
 {
     [SerializeField] private List<Furniture> randomFurniture;
     [SerializeField] private List<Furniture> staticFurniture;
+    [SerializeField] private List<Rug> rugs;
     [SerializeField] private List<Decoration> decorations;
+    [SerializeField] private int numberOfRugs = 0;
     [SerializeField] private int xLength = 1;
     [SerializeField] private int zLength = 1;
     public bool debugMode = false;
     private List<Furniture> placedFurniture;
     private List<Decoration> placedDecorations;
-    private List<Vector3> gridCoordinates;
+    private List<Rug> placedRugs;
+    private List<Vector3> furnitureCoordinates;
+    private List<Vector3> rugCoordinates;
     private List<Vector3> tempCoordinates;
     private List<Furniture> tempFurniture;
     private System.Random random;
@@ -20,7 +24,9 @@ public class FurniturePlacer : MonoBehaviour
     {
         placedFurniture = new List<Furniture>();
         placedDecorations = new List<Decoration>();
+        placedRugs = new List<Rug>();
         tempCoordinates = new List<Vector3>();
+        rugCoordinates = new List<Vector3>();
         RearrangeFurniture();
     }
 
@@ -37,7 +43,8 @@ public class FurniturePlacer : MonoBehaviour
         }
 
         random = new System.Random();
-        gridCoordinates = BuildCoordinates();
+        furnitureCoordinates = BuildCoordinates();
+        rugCoordinates = furnitureCoordinates;
         RegisterStaticFurniture();
 
         foreach (Furniture item in randomFurniture)
@@ -49,12 +56,12 @@ public class FurniturePlacer : MonoBehaviour
             {
                 if (item.alignTo.Count == 0)
                 {
-                    position = RandomPosition(gridCoordinates);
+                    position = RandomPosition(furnitureCoordinates);
                 }
                 else if (item.alignTo.Contains(FurnitureType.Wall))
                 {
                     // find all available walls (use find all walls)
-                    tempCoordinates = gridCoordinates.FindAll(FindEdge);
+                    tempCoordinates = furnitureCoordinates.FindAll(FindEdge);
                     // TODO: guard when tempCoordinates are empty
                     position = RandomPosition(tempCoordinates);
                     item.rotation = GetRotationDegrees(position);
@@ -62,7 +69,7 @@ public class FurniturePlacer : MonoBehaviour
                 else if (item.alignTo.Contains(FurnitureType.WallCorner))
                 {
                     // find all available walls (use find all walls)
-                    tempCoordinates = gridCoordinates.FindAll(FindCorner);
+                    tempCoordinates = furnitureCoordinates.FindAll(FindCorner);
                     position = RandomPosition(tempCoordinates);
                     item.rotation = GetRotationDegrees(position);
                 }
@@ -101,6 +108,7 @@ public class FurniturePlacer : MonoBehaviour
         }
 
         PlaceDecorations();
+        PlaceRugs();
     }
 
     private void PlaceDecorations()
@@ -131,8 +139,56 @@ public class FurniturePlacer : MonoBehaviour
             Transform decorationPosition = selectedFurniture.decorationSpaces[index];
             selectedFurniture.decorationSpaces.RemoveAt(index);
             // place instance
-            Debug.Log(decoration);
-            placedDecorations.Add(Instantiate(decoration, decorationPosition.position, selectedFurniture.transform.rotation));
+            placedDecorations.Add(Instantiate(decoration, decorationPosition.position, decorationPosition.transform.rotation));
+        }
+    }
+
+    private void PlaceRugs()
+    {
+        foreach (Rug rug in placedRugs)
+        {
+            Destroy(rug.gameObject);
+        }
+        placedRugs.Clear();
+
+        for (int i = 0; i < numberOfRugs; i++)
+        {
+            Rug rugPrefab = SelectRandom(rugs);
+
+            bool rugHasParents = rugPrefab.parentFurniture.Count > 0;
+
+            if (rugHasParents)
+            {
+                // get list of placed parents
+                List<Furniture> possibleParents = placedFurniture.FindAll((Furniture furniture) =>
+                {
+                    return rugPrefab.parentFurniture.Contains(furniture.type);
+                });
+
+                // pick one
+                Furniture parentFurniture = SelectRandom(possibleParents);
+                // resize
+
+                // align based on size & position
+                // place
+                placedRugs.Add(Instantiate(rugPrefab, parentFurniture.origin, Quaternion.identity));
+            }
+            else
+            {
+                // pick random location
+                Vector3 position = SelectRandom(rugCoordinates);
+                // resize
+                int xLength = random.Next((int)rugPrefab.xMax) + 1;
+                int zLength = random.Next((int)rugPrefab.zMax) + 1;
+                // if it fits
+                // place at location
+                Rug newRug = Instantiate(rugPrefab, position, Quaternion.identity);
+                Vector3 scale = new Vector3(xLength, rugPrefab.transform.localScale.y, zLength);
+                newRug.transform.localScale = scale;
+
+                placedRugs.Add(newRug);
+                // try 5 times
+            }
         }
     }
 
@@ -206,12 +262,13 @@ public class FurniturePlacer : MonoBehaviour
             for (float z = 0; z < furniture.RotatedZLength(); z++)
             {
                 Vector3 furnitureCoord = new Vector3(bottomLeftCoord.x + x, 0f, bottomLeftCoord.z + z);
-                gridCoordinates.Remove(furnitureCoord);
+                furnitureCoordinates.Remove(furnitureCoord);
+                if (!furniture.allowRug) rugCoordinates.Remove(furnitureCoord);
             }
         }
 
         // remove surrounding invalid spaces
-        gridCoordinates.RemoveAll((Vector3 coord) =>
+        furnitureCoordinates.RemoveAll((Vector3 coord) =>
         {
             return reservedSpaces.Contains(coord);
         });
@@ -233,7 +290,7 @@ public class FurniturePlacer : MonoBehaviour
             {
                 Vector3 furnitureCoord = new Vector3(bottomLeftCoord.x + x, 0f, bottomLeftCoord.z + z);
 
-                if (!gridCoordinates.Contains(furnitureCoord))
+                if (!furnitureCoordinates.Contains(furnitureCoord))
                 {
                     isEnoughRoom = false;
                     break;
@@ -266,7 +323,7 @@ public class FurniturePlacer : MonoBehaviour
 
     private bool FindFurnitureSpaces(Vector3 coord)
     {
-        if (gridCoordinates.Contains(coord)) return true;
+        if (furnitureCoordinates.Contains(coord)) return true;
 
         return false;
     }
@@ -275,6 +332,12 @@ public class FurniturePlacer : MonoBehaviour
     {
         RemoveFurnitureCoords(furniture);
         placedFurniture.Add(furniture);
+    }
+
+    private T SelectRandom<T>(List<T> list)
+    {
+        int index = random.Next(list.Count);
+        return list[index];
     }
 }
 

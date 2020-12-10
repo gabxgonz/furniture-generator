@@ -491,7 +491,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.53
+  orthographic size: 4.91
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -514,13 +514,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
-  m_LocalPosition: {x: 0, y: 6.27, z: 0}
+  m_LocalRotation: {x: 0.23911765, y: 0.36964378, z: -0.09904577, w: 0.8923991}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 45, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -694,11 +694,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   randomFurniture:
+  - {fileID: 3579087059753526433, guid: 02d56677d86764eb398e1f62130ada13, type: 3}
+  - {fileID: 4899918043917083608, guid: a4fe4571cc59644e7932faa891d6cd52, type: 3}
+  - {fileID: 1003786222232981387, guid: 64bf60913900f4a3283c463d5eda7eef, type: 3}
+  - {fileID: 7586431684011399527, guid: 7648fb960020c4680a6a2544d0d204ee, type: 3}
+  - {fileID: 5145059357289566386, guid: 6593a074cffe04f84a132818ba569711, type: 3}
+  - {fileID: 3550806957845100725, guid: 07e296453d23b466581f709b9088f4fc, type: 3}
+  - {fileID: 3213022272064338715, guid: 1732c5ede87da47b9868d907b30512e0, type: 3}
+  - {fileID: 6301831258100043185, guid: 04a9ba056d75a41378735bcff8e5954c, type: 3}
+  - {fileID: 1083490179148301278, guid: ebc501e53ef8e41a29503e67e216b44a, type: 3}
+  - {fileID: 8605850719097022678, guid: 862600ac8248249d8803caabb7c61dfa, type: 3}
   - {fileID: 7331650944336739022, guid: 22d7f102f02e3438a81b97bd0fc01cad, type: 3}
+  - {fileID: 4779682421693540398, guid: 1bd87fac5850845e0aeed645a4d6c91a, type: 3}
+  - {fileID: 4779682421693540398, guid: 1bd87fac5850845e0aeed645a4d6c91a, type: 3}
+  - {fileID: 5854304925618913203, guid: 69eb299ef244a45499d7a9a4a63fb950, type: 3}
+  - {fileID: 1843203707679572966, guid: 5ad7f8882ac8b4c63838faed269654d5, type: 3}
+  - {fileID: 1843203707679572966, guid: 5ad7f8882ac8b4c63838faed269654d5, type: 3}
+  - {fileID: 7151595254954838089, guid: 70288624087ef447f86e3692233d1d0d, type: 3}
   staticFurniture:
   - {fileID: 1005712774}
+  rugs:
+  - {fileID: 4379662075255168276, guid: e0a629d88acdd4fa586e8a2e1ad023f0, type: 3}
+  - {fileID: 3938935808488647257, guid: 5aff333a8378540cfba5aa38074c6617, type: 3}
   decorations:
+  - {fileID: 7965650466643454241, guid: 0bb2bd544ec8f499da0cfe00ea91e925, type: 3}
   - {fileID: 57876917914028860, guid: 3264aacd2a11548fb91e3e7cefbe284d, type: 3}
+  - {fileID: 7193109106805273135, guid: 7f0d0dc1b652647c998d9b42cadb8770, type: 3}
+  - {fileID: 5433935421111353400, guid: f91a8890e25d34132aaf4773bd0338d8, type: 3}
+  - {fileID: 5433935421111353400, guid: f91a8890e25d34132aaf4773bd0338d8, type: 3}
+  numberOfRugs: 2
   xLength: 8
   zLength: 8
   debugMode: 1
