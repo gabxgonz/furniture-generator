@@ -48,8 +48,9 @@ MonoBehaviour:
   type: 4
   xLength: 1
   zLength: 1
-  rotation: 90
-  origin: {x: 0, y: 0, z: 4}
+  allowRug: 0
+  rotation: 0
+  origin: {x: 2, y: 0, z: 0}
   relativeLookDirection: 2
   alignTo: 0200000004000000
   preferFront: 0

@@ -78,6 +78,7 @@ MonoBehaviour:
   type: 4
   xLength: 1
   zLength: 1
+  allowRug: 0
   rotation: 90
   origin: {x: 0, y: 0, z: 1}
   relativeLookDirection: 5

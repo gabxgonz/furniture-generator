@@ -722,7 +722,7 @@ MonoBehaviour:
   - {fileID: 7193109106805273135, guid: 7f0d0dc1b652647c998d9b42cadb8770, type: 3}
   - {fileID: 5433935421111353400, guid: f91a8890e25d34132aaf4773bd0338d8, type: 3}
   - {fileID: 5433935421111353400, guid: f91a8890e25d34132aaf4773bd0338d8, type: 3}
-  numberOfRugs: 2
+  numberOfRugs: 3
   xLength: 8
   zLength: 8
   debugMode: 1

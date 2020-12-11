@@ -171,8 +171,9 @@ MonoBehaviour:
   type: 10
   xLength: 2
   zLength: 2
+  allowRug: 1
   rotation: 0
-  origin: {x: 5, y: 0, z: 8}
+  origin: {x: 4, y: 0, z: 5}
   relativeLookDirection: 2
   alignTo: 
   preferFront: 1
@@ -181,9 +182,9 @@ MonoBehaviour:
   preferRight: 1
   preferCorner: 1
   frontAvailability: 2
-  backAvailability: 2
+  backAvailability: 3
   leftAvailability: 2
-  rightAvailability: 2
+  rightAvailability: 3
   frontLeftAvailable: 0
   frontRightAvailable: 0
   backLeftAvailable: 0

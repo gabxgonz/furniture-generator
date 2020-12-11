@@ -44,7 +44,7 @@ public class FurniturePlacer : MonoBehaviour
 
         random = new System.Random();
         furnitureCoordinates = BuildCoordinates();
-        rugCoordinates = furnitureCoordinates;
+        rugCoordinates = BuildCoordinates();
         RegisterStaticFurniture();
 
         foreach (Furniture item in randomFurniture)
@@ -156,38 +156,69 @@ public class FurniturePlacer : MonoBehaviour
             Rug rugPrefab = SelectRandom(rugs);
 
             bool rugHasParents = rugPrefab.parentFurniture.Count > 0;
+            bool rugFits;
+            // pick random location
+            // resize
+            int newRugX = (int)rugPrefab.xMax;
+            int newRugZ = (int)rugPrefab.zMax;
 
-            if (rugHasParents)
+            Vector3 rugOrigin;
+
+            if (!rugPrefab.forceMax)
             {
-                // get list of placed parents
-                List<Furniture> possibleParents = placedFurniture.FindAll((Furniture furniture) =>
-                {
-                    return rugPrefab.parentFurniture.Contains(furniture.type);
-                });
-
-                // pick one
-                Furniture parentFurniture = SelectRandom(possibleParents);
-                // resize
-
-                // align based on size & position
-                // place
-                placedRugs.Add(Instantiate(rugPrefab, parentFurniture.origin, Quaternion.identity));
+                newRugX = random.Next((int)rugPrefab.xMax) + 1;
+                newRugZ = random.Next((int)rugPrefab.zMax) + 1;
             }
-            else
-            {
-                // pick random location
-                Vector3 position = SelectRandom(rugCoordinates);
-                // resize
-                int xLength = random.Next((int)rugPrefab.xMax) + 1;
-                int zLength = random.Next((int)rugPrefab.zMax) + 1;
-                // if it fits
-                // place at location
-                Rug newRug = Instantiate(rugPrefab, position, Quaternion.identity);
-                Vector3 scale = new Vector3(xLength, rugPrefab.transform.localScale.y, zLength);
-                newRug.transform.localScale = scale;
 
-                placedRugs.Add(newRug);
+
+            Debug.Log("========================");
+            Debug.Log("Availabile Rug space: " + rugCoordinates.Count);
+            for (int attempt = 0; attempt < 5; attempt++)
+            {
+                if (rugHasParents)
+                {
+                    // get list of placed parents
+                    List<Furniture> possibleParents = placedFurniture.FindAll((Furniture furniture) =>
+                    {
+                        return rugPrefab.parentFurniture.Contains(furniture.type);
+                    });
+
+                    // pick one
+                    Furniture parentFurniture = SelectRandom(possibleParents);
+                    rugOrigin = parentFurniture.origin;
+                    // resize
+
+                    // align based on size & position
+
+                    //if it fits
+                    rugFits = RugFits(rugOrigin, newRugX, newRugZ);
+                }
+                else
+                {
+                    // select psitions that will fit dimensions
+                    List<Vector3> possiblePositions = rugCoordinates.FindAll((Vector3 coord) =>
+                    {
+                        return coord.x + newRugX < xLength && coord.z + newRugZ < zLength;
+                    });
+
+                    rugOrigin = SelectRandom(possiblePositions);
+                    rugFits = RugFits(rugOrigin, newRugX, newRugZ);
+                }
+
+                if (rugFits)
+                {
+                    // place at location
+                    Rug newRug = Instantiate(rugPrefab, rugOrigin, Quaternion.identity);
+                    Vector3 scale = new Vector3(newRugX, rugPrefab.transform.localScale.y, newRugZ);
+                    newRug.transform.localScale = scale;
+                    placedRugs.Add(newRug);
+
+                    // Remove coords
+                    RemoveRugCoords(rugOrigin, newRugX, newRugZ);
+                    break;
+                }
                 // try 5 times
+                Debug.Log("attempt: " + attempt);
             }
         }
     }
@@ -274,6 +305,19 @@ public class FurniturePlacer : MonoBehaviour
         });
     }
 
+    private void RemoveRugCoords(Vector3 position, float rugX, float rugZ)
+    {
+        for (float x = 0; x < rugX; x++)
+        {
+            for (float z = 0; z < rugZ; z++)
+            {
+                Vector3 rugCoord = new Vector3(position.x + x, 0f, position.z + z);
+                Debug.Log("Removing: " + rugCoord);
+                rugCoordinates.Remove(rugCoord);
+            }
+        }
+    }
+
     private bool IsEnoughRoom(Furniture furniture, Vector3 origin)
     {
         Vector3 bottomLeftCoord = furniture.RotatedBottomLeft(origin);
@@ -338,6 +382,24 @@ public class FurniturePlacer : MonoBehaviour
     {
         int index = random.Next(list.Count);
         return list[index];
+    }
+
+    private bool RugFits(Vector3 origin, int xLength, int zLength)
+    {
+        bool fits = true;
+        for (float x = 0; x < xLength; x++)
+        {
+            if (!fits) break;
+
+            for (float z = 0; z < zLength; z++)
+            {
+                Vector3 testPosition = new Vector3(origin.x + x, 0f, origin.z + z);
+                Debug.Log("Testing Position: " + testPosition);
+                fits = rugCoordinates.Contains(testPosition);
+                if (!fits) break;
+            }
+        }
+        return fits;
     }
 }
 
