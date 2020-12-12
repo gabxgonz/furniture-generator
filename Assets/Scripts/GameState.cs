@@ -5,9 +5,12 @@ using UnityEngine;
 public class GameState : MonoBehaviour
 {
     public List<FurnitureValue> values = new List<FurnitureValue>();
+    public Dictionary<string, FurnitureValue> dimensions = new Dictionary<string, FurnitureValue>();
 
     void Awake()
     {
+        dimensions.Add("length", new FurnitureValue("Room Length", FurnitureType.Null, 8, 50));
+        dimensions.Add("width", new FurnitureValue("Room Width", FurnitureType.Null, 8, 50));
         values.Add(new FurnitureValue("Beds", FurnitureType.Bed, 1, 10));
         values.Add(new FurnitureValue("Chairs", FurnitureType.Chair, 1, 10));
         values.Add(new FurnitureValue("Couches", FurnitureType.Couch, 1, 10));

@@ -10,28 +10,31 @@ public class Settings : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private FurniturePlacer furniturePlacer;
 
-    void Start()
+    public void ToggleSettings()
+    {
+        settingsPanel.SetActive(!settingsPanel.activeInHierarchy);
+    }
+
+    protected void Start()
     {
         CreateSliders();
     }
 
-    void CreateSliders()
+    private void CreateSliders()
     {
-        foreach (FurnitureValue value in state.values)
-        {
-            TitledSlider slider = Instantiate(sliderPrefab, Vector3.zero, Quaternion.identity);
-            slider.transform.SetParent(settingsContent);
-            slider.title.SetText(value.title);
-            slider.value.SetText(value.value.ToString());
-            slider.slider.maxValue = value.maxValue;
-            slider.slider.SetValueWithoutNotify(value.value);
-            slider.onSetValue = value.SetValue;
-            slider.furniturePlacer = furniturePlacer;
-        }
+        foreach (FurnitureValue value in state.dimensions.Values) InitSlider(value);
+        foreach (FurnitureValue value in state.values) InitSlider(value);
     }
 
-    public void ToggleSettings()
+    private void InitSlider(FurnitureValue value)
     {
-        settingsPanel.SetActive(!settingsPanel.activeInHierarchy);
+        TitledSlider slider = Instantiate(sliderPrefab, Vector3.zero, Quaternion.identity);
+        slider.transform.SetParent(settingsContent);
+        slider.title.SetText(value.title);
+        slider.value.SetText(value.value.ToString());
+        slider.slider.maxValue = value.maxValue;
+        slider.slider.SetValueWithoutNotify(value.value);
+        slider.onSetValue = value.SetValue;
+        slider.furniturePlacer = furniturePlacer;
     }
 }

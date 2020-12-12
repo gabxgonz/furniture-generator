@@ -8,8 +8,9 @@ public class FurniturePlacer : MonoBehaviour
     [SerializeField] private List<Rug> rugs;
     [SerializeField] private List<Decoration> decorations;
     [SerializeField] private int numberOfRugs = 0;
-    [SerializeField] private int xLength = 1;
-    [SerializeField] private int zLength = 1;
+    [SerializeField] private int xLength = 8;
+    [SerializeField] private int zLength = 8;
+    [SerializeField] private GameObject floor;
     private RandomSound randomSound;
     public bool debugMode = false;
     public GameState state;
@@ -35,6 +36,7 @@ public class FurniturePlacer : MonoBehaviour
 
     public void RearrangeFurniture()
     {
+        SetDimensions();
 
         foreach (Furniture item in placedFurniture.ToArray())
         {
@@ -54,8 +56,6 @@ public class FurniturePlacer : MonoBehaviour
         {
             for (int i = 0; i < value.value; i++)
             {
-
-
                 Vector3 selectedPosition;
                 Vector3 position;
 
@@ -413,6 +413,14 @@ public class FurniturePlacer : MonoBehaviour
     public void PlaySound()
     {
         if (randomSound != null) randomSound.PlaySound();
+    }
+
+    private void SetDimensions()
+    {
+        xLength = state.dimensions["length"].value;
+        zLength = state.dimensions["width"].value;
+        floor.transform.localScale = new Vector3(xLength, floor.transform.localScale.y, zLength);
+        floor.transform.position = new Vector3((float)xLength / 2, floor.transform.position.y, (float)zLength / 2);
     }
 }
 
