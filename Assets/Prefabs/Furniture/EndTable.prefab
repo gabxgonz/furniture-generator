@@ -78,10 +78,11 @@ MonoBehaviour:
   type: 7
   xLength: 1
   zLength: 1
+  allowRug: 1
   rotation: 0
   origin: {x: 0, y: 0, z: 0}
-  relativeLookDirection: 2
-  alignTo: 05000000000000000300000003000000
+  alignTo: 03000000000000000b000000
+  relativeLookDirection: 020000000200000001000000
   preferFront: 0
   preferBack: 0
   preferLeft: 1

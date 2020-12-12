@@ -60,8 +60,8 @@ public class Furniture : MonoBehaviour
 
 
     [Header("Parent Furniture")]
-    public FacingDirection relativeLookDirection = FacingDirection.Forward;
     public List<FurnitureType> alignTo;
+    public List<FacingDirection> relativeLookDirection;
 
     [Header("Parent Side Preference")]
     public bool preferFront = true;
@@ -701,8 +701,10 @@ public class Furniture : MonoBehaviour
     {
         Vector3 parentCenter = parent.Center();
         rotation = 0f;
+        int lookDirectionIndex = alignTo.IndexOf(parent.type);
+        FacingDirection direction = relativeLookDirection[lookDirectionIndex];
 
-        switch (relativeLookDirection)
+        switch (direction)
         {
             case FacingDirection.Toward:
                 if (position.x >= parent.FrontRight().x) rotation = 270f;

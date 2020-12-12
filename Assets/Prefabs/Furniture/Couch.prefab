@@ -47,10 +47,11 @@ MonoBehaviour:
   type: 3
   xLength: 3
   zLength: 1
-  rotation: 0
-  origin: {x: 5, y: 0, z: 2}
-  relativeLookDirection: 0
-  alignTo: 0b000000
+  allowRug: 1
+  rotation: 180
+  origin: {x: 3, y: 0, z: 0}
+  alignTo: 
+  relativeLookDirection: 02000000
   preferFront: 1
   preferBack: 0
   preferLeft: 0

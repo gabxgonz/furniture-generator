@@ -21,10 +21,12 @@ public class FurniturePlacer : MonoBehaviour
     private List<Vector3> rugCoordinates;
     private List<Vector3> tempCoordinates;
     private List<Furniture> tempFurniture;
+    private Dictionary<FurnitureType, List<FurnitureType>> furnitureTypeMap;
     private System.Random random;
 
     void Start()
     {
+        BuildFurnitureTypeMap();
         randomSound = GetComponent<RandomSound>();
         placedFurniture = new List<Furniture>();
         placedDecorations = new List<Decoration>();
@@ -57,71 +59,52 @@ public class FurniturePlacer : MonoBehaviour
             for (int i = 0; i < value.value; i++)
             {
                 Vector3 selectedPosition;
-                Vector3 position;
+                Vector3? position = null;
 
                 Furniture furniture = SelectRandom<Furniture>(randomFurniture.FindAll((Furniture item) =>
                 {
-                    return item.type == value.type;
+                    return furnitureTypeMap[value.type].Contains(item.type);
                 }));
 
-                for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
+                bool hasNonWallParent = !furniture.alignTo.TrueForAll((FurnitureType type) =>
                 {
-                    if (furniture.alignTo.Count == 0)
-                    {
-                        position = RandomPosition(furnitureCoordinates);
-                    }
-                    else if (furniture.alignTo.Contains(FurnitureType.Wall))
-                    {
-                        // find all available walls (use find all walls)
-                        tempCoordinates = furnitureCoordinates.FindAll(FindEdge);
-                        // TODO: guard when tempCoordinates are empty
-                        position = RandomPosition(tempCoordinates);
-                        furniture.rotation = GetRotationDegrees(position);
-                    }
-                    else if (furniture.alignTo.Contains(FurnitureType.WallCorner))
-                    {
-                        // find all available walls (use find all walls)
-                        tempCoordinates = furnitureCoordinates.FindAll(FindCorner);
-                        position = RandomPosition(tempCoordinates);
-                        furniture.rotation = GetRotationDegrees(position);
-                    }
-                    else
-                    {
-                        // find piece of furniture with free spaces
-                        tempFurniture = placedFurniture.FindAll(furniture.FindDependantFurniture);
-                        int furnitureIndex = random.Next(tempFurniture.Count);
+                    return type == FurnitureType.Wall || type == FurnitureType.WallCorner;
+                });
 
-                        if (tempFurniture.Count == 0) continue;
-                        // find spaces that are on furnitures preferred parent side
-                        tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces(furniture).FindAll(FindFurnitureSpaces);
+                if (hasNonWallParent && position == null)
+                {
+                    position = PlaceRelativeParent(furniture);
+                }
 
-                        if (tempCoordinates.Count == 0) continue;
+                if (furniture.alignTo.Contains(FurnitureType.WallCorner) && position == null)
+                {
+                    position = PlaceRelativeCorner(furniture);
+                }
 
-                        position = RandomPosition(tempCoordinates);
-                        furniture.SetParentRelativeRotation(position, tempFurniture[furnitureIndex]);
-                    }
+                if (furniture.alignTo.Contains(FurnitureType.Wall) && position == null)
+                {
+                    position = PlaceRelativeWall(furniture);
+                }
 
-                    bool isEnoughRoom = IsEnoughRoom(furniture, position);
+                if (position == null)
+                {
+                    position = PlaceRandom(furniture);
+                }
 
-                    if (isEnoughRoom)
-                    {
-                        selectedPosition = position;
-                        furniture.origin = furniture.RotatedBottomLeft(selectedPosition);
+                if (position != null)
+                {
+                    selectedPosition = (Vector3)position;
+                    furniture.origin = furniture.RotatedBottomLeft(selectedPosition);
 
-                        Furniture newFurniture = Instantiate(furniture, furniture.WorldOrigin(selectedPosition), Quaternion.Euler(0f, furniture.rotation, 0f));
+                    Furniture newFurniture = Instantiate(furniture, furniture.WorldOrigin(selectedPosition), Quaternion.Euler(0f, furniture.rotation, 0f));
 
-                        AddToGrid(newFurniture);
-                        break;
-                    }
-
-                    if (placementAttempt == 9) Debug.Log("No room for furniture: " + furniture);
-                    continue;
+                    AddToGrid(newFurniture);
                 }
             }
         }
 
         PlaceDecorations();
-        PlaceRugs();
+        // PlaceRugs();
         PlaySound();
     }
 
@@ -421,6 +404,157 @@ public class FurniturePlacer : MonoBehaviour
         zLength = state.dimensions["width"].value;
         floor.transform.localScale = new Vector3(xLength, floor.transform.localScale.y, zLength);
         floor.transform.position = new Vector3((float)xLength / 2, floor.transform.position.y, (float)zLength / 2);
+    }
+
+    private void BuildFurnitureTypeMap()
+    {
+        furnitureTypeMap = new Dictionary<FurnitureType, List<FurnitureType>>();
+
+        furnitureTypeMap.Add(FurnitureType.Door, new List<FurnitureType>{
+            FurnitureType.Door,
+        });
+
+        furnitureTypeMap.Add(FurnitureType.Counter, new List<FurnitureType>{
+            FurnitureType.Counter,
+            FurnitureType.CornerItem,
+        });
+
+        furnitureTypeMap.Add(FurnitureType.Bed, new List<FurnitureType>{
+            FurnitureType.Bed,
+        });
+
+        furnitureTypeMap.Add(FurnitureType.Couch, new List<FurnitureType>{
+            FurnitureType.Couch,
+        });
+
+        furnitureTypeMap.Add(FurnitureType.Table, new List<FurnitureType>{
+            FurnitureType.Table,
+            FurnitureType.Desk,
+            FurnitureType.EndTable,
+        });
+
+        furnitureTypeMap.Add(FurnitureType.Chair, new List<FurnitureType>{
+            FurnitureType.Chair,
+        });
+
+        furnitureTypeMap.Add(FurnitureType.Lamp, new List<FurnitureType>{
+            FurnitureType.Lamp,
+        });
+    }
+
+    private Vector3? PlaceRelativeParent(Furniture furniture)
+    {
+        Vector3? position = null;
+        List<Furniture> availableParents = new List<Furniture>();
+        Dictionary<Vector3, Furniture> availableCoordinates = new Dictionary<Vector3, Furniture>();
+
+        // find all furniture with free spaces
+        availableParents = placedFurniture.FindAll(furniture.FindDependantFurniture);
+        int furnitureIndex = random.Next(availableParents.Count);
+
+        // find all valid spaces
+        availableParents.ForEach((Furniture parent) =>
+        {
+            parent.ValidSpaces(furniture).ForEach((Vector3 validSpace) =>
+            {
+                if (!availableCoordinates.ContainsKey(validSpace))
+                {
+                    availableCoordinates.Add(validSpace, parent);
+                }
+            });
+        });
+
+        // try every valid space
+        foreach (Vector3 coordinate in availableCoordinates.Keys)
+        {
+            furniture.SetParentRelativeRotation(coordinate, availableCoordinates[coordinate]);
+            if (IsEnoughRoom(furniture, coordinate))
+            {
+                position = coordinate;
+                break;
+            }
+        }
+
+        return position;
+    }
+
+    private Vector3? PlaceRelativeCorner(Furniture furniture)
+    {
+        List<Vector3> availableCoordinates = new List<Vector3>();
+        Vector3? position = null;
+
+        // find all corners and randomly sort
+        availableCoordinates = furnitureCoordinates.FindAll(FindCorner);
+        Shuffle(availableCoordinates);
+
+        foreach (Vector3 coordinate in availableCoordinates)
+        {
+            furniture.rotation = GetRotationDegrees(coordinate);
+            if (IsEnoughRoom(furniture, coordinate))
+            {
+                position = coordinate;
+                break;
+            }
+        }
+
+        return position;
+    }
+
+    private Vector3? PlaceRelativeWall(Furniture furniture)
+    {
+        List<Vector3> availableCoordinates = new List<Vector3>();
+        Vector3? position = null;
+
+        // find all available walls (use find all walls)
+        availableCoordinates = furnitureCoordinates.FindAll(FindEdge);
+        Shuffle(availableCoordinates);
+
+        foreach (Vector3 coordinate in availableCoordinates)
+        {
+            furniture.rotation = GetRotationDegrees(coordinate);
+            if (IsEnoughRoom(furniture, coordinate))
+            {
+                position = coordinate;
+                break;
+            }
+        }
+
+        return position;
+    }
+
+    private Vector3? PlaceRandom(Furniture furniture)
+    {
+        Vector3? position = null;
+
+        // find all available walls (use find all walls)
+
+        Shuffle(furnitureCoordinates);
+
+        foreach (Vector3 coordinate in furnitureCoordinates)
+        {
+            furniture.rotation = GetRotationDegrees(coordinate);
+
+            if (IsEnoughRoom(furniture, coordinate))
+            {
+                position = coordinate;
+                break;
+            }
+        }
+
+        return position;
+    }
+
+    private void Shuffle<T>(List<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = random.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 }
 

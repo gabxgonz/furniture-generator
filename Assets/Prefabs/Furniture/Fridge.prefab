@@ -50,9 +50,9 @@ MonoBehaviour:
   zLength: 1
   allowRug: 0
   rotation: 0
-  origin: {x: 2, y: 0, z: 0}
-  relativeLookDirection: 2
-  alignTo: 0200000004000000
+  origin: {x: 1, y: 0, z: 0}
+  alignTo: 02000000040000000b000000
+  relativeLookDirection: 020000000200000001000000
   preferFront: 0
   preferBack: 0
   preferLeft: 1

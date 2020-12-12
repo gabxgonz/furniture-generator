@@ -110,10 +110,10 @@ MonoBehaviour:
   xLength: 2
   zLength: 1
   allowRug: 1
-  rotation: 270
-  origin: {x: 7, y: 0, z: 4}
-  relativeLookDirection: 2
+  rotation: 90
+  origin: {x: 0, y: 0, z: 2}
   alignTo: 0b000000
+  relativeLookDirection: 02000000
   preferFront: 1
   preferBack: 0
   preferLeft: 0
