@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-
-public class FurnitureCount
+public class FurnitureValue
 {
     public string title;
-    public int count = 1;
+    public int value = 1;
     public FurnitureType type;
     public int maxValue = 10;
 
-    public FurnitureCount(string title, FurnitureType type, int count, int maxValue)
+    public FurnitureValue(string title, FurnitureType type, int value, int maxValue)
     {
         this.type = type;
         this.title = title;
-        this.count = count;
+        this.value = value;
         this.maxValue = maxValue;
     }
 
-    public void SetCount(int count)
+    public void SetValue(int value)
     {
-        this.count = count;
+        this.value = value;
     }
 }

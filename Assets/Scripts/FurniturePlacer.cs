@@ -10,6 +10,7 @@ public class FurniturePlacer : MonoBehaviour
     [SerializeField] private int numberOfRugs = 0;
     [SerializeField] private int xLength = 1;
     [SerializeField] private int zLength = 1;
+    private RandomSound randomSound;
     public bool debugMode = false;
     public GameState state;
     private List<Furniture> placedFurniture;
@@ -23,6 +24,7 @@ public class FurniturePlacer : MonoBehaviour
 
     void Start()
     {
+        randomSound = GetComponent<RandomSound>();
         placedFurniture = new List<Furniture>();
         placedDecorations = new List<Decoration>();
         placedRugs = new List<Rug>();
@@ -48,9 +50,9 @@ public class FurniturePlacer : MonoBehaviour
         rugCoordinates = BuildCoordinates();
         RegisterStaticFurniture();
 
-        foreach (FurnitureCount count in state.counts)
+        foreach (FurnitureValue value in state.values)
         {
-            for (int i = 0; i < count.count; i++)
+            for (int i = 0; i < value.value; i++)
             {
 
 
@@ -59,7 +61,7 @@ public class FurniturePlacer : MonoBehaviour
 
                 Furniture furniture = SelectRandom<Furniture>(randomFurniture.FindAll((Furniture item) =>
                 {
-                    return item.type == count.type;
+                    return item.type == value.type;
                 }));
 
                 for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
@@ -120,6 +122,7 @@ public class FurniturePlacer : MonoBehaviour
 
         PlaceDecorations();
         PlaceRugs();
+        PlaySound();
     }
 
     private void PlaceDecorations()
@@ -405,6 +408,11 @@ public class FurniturePlacer : MonoBehaviour
             }
         }
         return fits;
+    }
+
+    public void PlaySound()
+    {
+        if (randomSound != null) randomSound.PlaySound();
     }
 }
 

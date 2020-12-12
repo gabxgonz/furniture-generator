@@ -4,28 +4,28 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public delegate void OnSetCount(int count);
+public delegate void OnSetValue(int count);
 
 public class TitledSlider : MonoBehaviour
 {
     public TextMeshProUGUI title;
-    public TextMeshProUGUI count;
+    public TextMeshProUGUI value;
     public Slider slider;
-    public OnSetCount onSetCount;
-
+    public OnSetValue onSetValue;
+    [HideInInspector] public FurniturePlacer furniturePlacer;
 
     void Start()
     {
-        slider.onValueChanged.AddListener(delegate { SetCount(); });
+        slider.onValueChanged.AddListener(delegate { SetValue(); });
     }
 
-    void Update()
+    private void SetValue()
     {
-    }
+        onSetValue((int)slider.value);
+        value.SetText(slider.value.ToString());
 
-    private void SetCount()
-    {
-        onSetCount((int)slider.value);
-        count.SetText(slider.value.ToString());
+        if (furniturePlacer == null) return;
+        furniturePlacer.RearrangeFurniture();
+        furniturePlacer.PlaySound();
     }
 }

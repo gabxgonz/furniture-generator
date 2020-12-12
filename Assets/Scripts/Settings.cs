@@ -8,6 +8,7 @@ public class Settings : MonoBehaviour
     [SerializeField] private TitledSlider sliderPrefab;
     [SerializeField] private Transform settingsContent;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private FurniturePlacer furniturePlacer;
 
     void Start()
     {
@@ -16,16 +17,16 @@ public class Settings : MonoBehaviour
 
     void CreateSliders()
     {
-        foreach (FurnitureCount count in state.counts)
+        foreach (FurnitureValue value in state.values)
         {
             TitledSlider slider = Instantiate(sliderPrefab, Vector3.zero, Quaternion.identity);
             slider.transform.SetParent(settingsContent);
-            // slider.transform.localScale = new Vector3(1f, 1f, 1f);
-            slider.title.SetText(count.title);
-            slider.count.SetText(count.count.ToString());
-            slider.slider.maxValue = count.maxValue;
-            slider.slider.SetValueWithoutNotify(count.count);
-            slider.onSetCount = count.SetCount;
+            slider.title.SetText(value.title);
+            slider.value.SetText(value.value.ToString());
+            slider.slider.maxValue = value.maxValue;
+            slider.slider.SetValueWithoutNotify(value.value);
+            slider.onSetValue = value.SetValue;
+            slider.furniturePlacer = furniturePlacer;
         }
     }
 
@@ -33,5 +34,4 @@ public class Settings : MonoBehaviour
     {
         settingsPanel.SetActive(!settingsPanel.activeInHierarchy);
     }
-
 }
