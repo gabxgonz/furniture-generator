@@ -32,6 +32,7 @@ public class Settings : MonoBehaviour
         slider.transform.SetParent(settingsContent);
         slider.title.SetText(value.title);
         slider.value.SetText(value.value.ToString());
+        slider.slider.minValue = value.minValue;
         slider.slider.maxValue = value.maxValue;
         slider.slider.SetValueWithoutNotify(value.value);
         slider.onSetValue = value.SetValue;

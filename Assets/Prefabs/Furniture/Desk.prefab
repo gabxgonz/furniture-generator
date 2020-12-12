@@ -109,8 +109,9 @@ MonoBehaviour:
   type: 5
   xLength: 2
   zLength: 1
+  allowRug: 1
   rotation: 270
-  origin: {x: 7, y: 0, z: 2}
+  origin: {x: 7, y: 0, z: 4}
   relativeLookDirection: 2
   alignTo: 0b000000
   preferFront: 1

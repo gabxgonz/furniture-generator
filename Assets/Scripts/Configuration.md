@@ -5,6 +5,8 @@ Adjusting any slider will rearrange the room.
 ## Room Size
 - Length: The size along the X axis
 - Width: The size along the Z axis
+- Min: 1
+- Max: 12
 
 ## Quantity
 The slider value in the configuration menu represents the maximum of a type of furniture that will spawn.
@@ -40,8 +42,8 @@ The order that items are placed is as follows.
 1. Kitchen
 1. Beds
 1. Couches
-1. Chairs
 1. Tables
+1. Chairs
 1. Lamps
 1. Decorations
 1. Rugs
