@@ -24,6 +24,7 @@ public class Settings : MonoBehaviour
     {
         foreach (FurnitureValue value in state.dimensions.Values) InitSlider(value);
         foreach (FurnitureValue value in state.values) InitSlider(value);
+        InitSlider(state.decorations);
     }
 
     private void InitSlider(FurnitureValue value)

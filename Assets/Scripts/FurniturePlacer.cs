@@ -110,13 +110,15 @@ public class FurniturePlacer : MonoBehaviour
 
     private void PlaceDecorations()
     {
-        foreach (Decoration decoration in placedDecorations)
-        {
-            Destroy(decoration.gameObject);
-        }
+        foreach (Decoration decoration in placedDecorations) Destroy(decoration.gameObject);
         placedDecorations.Clear();
 
-        // for each dcoreation
+        // while less than total
+        // pick all decorations that are not maxed
+        // shuffle
+        // find all decoration spaces
+        // shuffle
+        // try every space
         foreach (Decoration decoration in decorations)
         {
             // find dependent furnitures that aren't decorated

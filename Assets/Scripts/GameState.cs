@@ -6,6 +6,7 @@ public class GameState : MonoBehaviour
 {
     public List<FurnitureValue> values = new List<FurnitureValue>();
     public Dictionary<string, FurnitureValue> dimensions = new Dictionary<string, FurnitureValue>();
+    public FurnitureValue decorations;
 
     void Awake()
     {
@@ -18,5 +19,6 @@ public class GameState : MonoBehaviour
         values.Add(new FurnitureValue("Tables", FurnitureType.Table, 1, 0, 10));
         values.Add(new FurnitureValue("Chairs", FurnitureType.Chair, 1, 0, 10));
         values.Add(new FurnitureValue("Lamps", FurnitureType.Lamp, 1, 0, 10));
+        decorations = new FurnitureValue("Decorations", FurnitureType.Null, 10, 0, 20);
     }
 }
