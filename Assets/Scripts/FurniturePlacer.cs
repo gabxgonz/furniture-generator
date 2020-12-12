@@ -11,6 +11,7 @@ public class FurniturePlacer : MonoBehaviour
     [SerializeField] private int xLength = 1;
     [SerializeField] private int zLength = 1;
     public bool debugMode = false;
+    public GameState state;
     private List<Furniture> placedFurniture;
     private List<Decoration> placedDecorations;
     private List<Rug> placedRugs;
@@ -47,63 +48,73 @@ public class FurniturePlacer : MonoBehaviour
         rugCoordinates = BuildCoordinates();
         RegisterStaticFurniture();
 
-        foreach (Furniture item in randomFurniture)
+        foreach (FurnitureCount count in state.counts)
         {
-            Vector3 selectedPosition;
-            Vector3 position;
-
-            for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
+            for (int i = 0; i < count.count; i++)
             {
-                if (item.alignTo.Count == 0)
+
+
+                Vector3 selectedPosition;
+                Vector3 position;
+
+                Furniture furniture = SelectRandom<Furniture>(randomFurniture.FindAll((Furniture item) =>
                 {
-                    position = RandomPosition(furnitureCoordinates);
-                }
-                else if (item.alignTo.Contains(FurnitureType.Wall))
+                    return item.type == count.type;
+                }));
+
+                for (int placementAttempt = 0; placementAttempt < 10; placementAttempt++)
                 {
-                    // find all available walls (use find all walls)
-                    tempCoordinates = furnitureCoordinates.FindAll(FindEdge);
-                    // TODO: guard when tempCoordinates are empty
-                    position = RandomPosition(tempCoordinates);
-                    item.rotation = GetRotationDegrees(position);
+                    if (furniture.alignTo.Count == 0)
+                    {
+                        position = RandomPosition(furnitureCoordinates);
+                    }
+                    else if (furniture.alignTo.Contains(FurnitureType.Wall))
+                    {
+                        // find all available walls (use find all walls)
+                        tempCoordinates = furnitureCoordinates.FindAll(FindEdge);
+                        // TODO: guard when tempCoordinates are empty
+                        position = RandomPosition(tempCoordinates);
+                        furniture.rotation = GetRotationDegrees(position);
+                    }
+                    else if (furniture.alignTo.Contains(FurnitureType.WallCorner))
+                    {
+                        // find all available walls (use find all walls)
+                        tempCoordinates = furnitureCoordinates.FindAll(FindCorner);
+                        position = RandomPosition(tempCoordinates);
+                        furniture.rotation = GetRotationDegrees(position);
+                    }
+                    else
+                    {
+                        // find piece of furniture with free spaces
+                        tempFurniture = placedFurniture.FindAll(furniture.FindDependantFurniture);
+                        int furnitureIndex = random.Next(tempFurniture.Count);
+
+                        if (tempFurniture.Count == 0) continue;
+                        // find spaces that are on furnitures preferred parent side
+                        tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces(furniture).FindAll(FindFurnitureSpaces);
+
+                        if (tempCoordinates.Count == 0) continue;
+
+                        position = RandomPosition(tempCoordinates);
+                        furniture.SetParentRelativeRotation(position, tempFurniture[furnitureIndex]);
+                    }
+
+                    bool isEnoughRoom = IsEnoughRoom(furniture, position);
+
+                    if (isEnoughRoom)
+                    {
+                        selectedPosition = position;
+                        furniture.origin = furniture.RotatedBottomLeft(selectedPosition);
+
+                        Furniture newFurniture = Instantiate(furniture, furniture.WorldOrigin(selectedPosition), Quaternion.Euler(0f, furniture.rotation, 0f));
+
+                        AddToGrid(newFurniture);
+                        break;
+                    }
+
+                    if (placementAttempt == 9) Debug.Log("No room for furniture: " + furniture);
+                    continue;
                 }
-                else if (item.alignTo.Contains(FurnitureType.WallCorner))
-                {
-                    // find all available walls (use find all walls)
-                    tempCoordinates = furnitureCoordinates.FindAll(FindCorner);
-                    position = RandomPosition(tempCoordinates);
-                    item.rotation = GetRotationDegrees(position);
-                }
-                else
-                {
-                    // find piece of furniture with free spaces
-                    tempFurniture = placedFurniture.FindAll(item.FindDependantFurniture);
-                    int furnitureIndex = random.Next(tempFurniture.Count);
-
-                    if (tempFurniture.Count == 0) continue;
-                    // find spaces that are on furnitures preferred parent side
-                    tempCoordinates = tempFurniture[furnitureIndex].ValidSpaces(item).FindAll(FindFurnitureSpaces);
-
-                    if (tempCoordinates.Count == 0) continue;
-
-                    position = RandomPosition(tempCoordinates);
-                    item.SetParentRelativeRotation(position, tempFurniture[furnitureIndex]);
-                }
-
-                bool isEnoughRoom = IsEnoughRoom(item, position);
-
-                if (isEnoughRoom)
-                {
-                    selectedPosition = position;
-                    item.origin = item.RotatedBottomLeft(selectedPosition);
-
-                    Furniture newFurniture = Instantiate(item, item.WorldOrigin(selectedPosition), Quaternion.Euler(0f, item.rotation, 0f));
-
-                    AddToGrid(newFurniture);
-                    break;
-                }
-
-                if (placementAttempt == 9) Debug.Log("No room for furniture: " + item);
-                continue;
             }
         }
 
@@ -171,8 +182,6 @@ public class FurniturePlacer : MonoBehaviour
             }
 
 
-            Debug.Log("========================");
-            Debug.Log("Availabile Rug space: " + rugCoordinates.Count);
             for (int attempt = 0; attempt < 5; attempt++)
             {
                 if (rugHasParents)
@@ -217,8 +226,6 @@ public class FurniturePlacer : MonoBehaviour
                     RemoveRugCoords(rugOrigin, newRugX, newRugZ);
                     break;
                 }
-                // try 5 times
-                Debug.Log("attempt: " + attempt);
             }
         }
     }
@@ -312,7 +319,6 @@ public class FurniturePlacer : MonoBehaviour
             for (float z = 0; z < rugZ; z++)
             {
                 Vector3 rugCoord = new Vector3(position.x + x, 0f, position.z + z);
-                Debug.Log("Removing: " + rugCoord);
                 rugCoordinates.Remove(rugCoord);
             }
         }
@@ -394,7 +400,6 @@ public class FurniturePlacer : MonoBehaviour
             for (float z = 0; z < zLength; z++)
             {
                 Vector3 testPosition = new Vector3(origin.x + x, 0f, origin.z + z);
-                Debug.Log("Testing Position: " + testPosition);
                 fits = rugCoordinates.Contains(testPosition);
                 if (!fits) break;
             }
