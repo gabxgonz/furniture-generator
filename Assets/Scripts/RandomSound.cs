@@ -6,13 +6,11 @@ public class RandomSound : MonoBehaviour
 {
     [SerializeField] private List<AudioClip> sounds;
     [SerializeField] private int concurrentSounds = 1;
-    private List<AudioSource> sources;
-    private System.Random random;
+    private List<AudioSource> sources = new List<AudioSource>();
+    private System.Random random = new System.Random();
 
     void Start()
     {
-        sources = new List<AudioSource>();
-        random = new System.Random();
         InitAudioSources();
         PlaySound();
     }

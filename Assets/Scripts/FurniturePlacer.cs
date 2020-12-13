@@ -57,7 +57,7 @@ public class FurniturePlacer : MonoBehaviour
         rugCoordinates = BuildCoordinates();
         RegisterStaticFurniture();
 
-        foreach (FurnitureValue value in state.values)
+        foreach (FurnitureValue value in state.furnitureValues.Values)
         {
             for (int i = 0; i < value.value; i++)
             {
@@ -127,7 +127,7 @@ public class FurniturePlacer : MonoBehaviour
         decorationTotals.Clear();
 
         // while less than total
-        for (int i = 0; i < state.decorations.value; i++)
+        for (int i = 0; i < state.decorationValue.value; i++)
         {
             // pick all decorations that are not maxed
             List<Decoration> unmaxedDecorations = new List<Decoration>();
