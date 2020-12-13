@@ -51,6 +51,7 @@ public class FurniturePlacer : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
+        furnitureTotals.Clear();
 
         random = new System.Random();
         furnitureCoordinates = BuildCoordinates();
@@ -64,16 +65,7 @@ public class FurniturePlacer : MonoBehaviour
                 Vector3 selectedPosition;
                 Vector3? position = null;
 
-                Furniture furniture = SelectRandom<Furniture>(randomFurniture.FindAll((Furniture item) =>
-                {
-                    bool isCurrentType = furnitureTypeMap[value.type].Contains(item.type);
-                    if (!isCurrentType) return false;
-
-                    List<Furniture> duplicates = placedFurniture.FindAll((placedFurn) => placedFurn.name == item.name + "(Clone)");
-                    bool furnitureIsMaxed = item.max != 0 && duplicates.Count >= item.max;
-
-                    return !furnitureIsMaxed;
-                }));
+                Furniture furniture = SelectRandomFurniture(value.type);
 
                 bool hasNonWallParent = !furniture.alignTo.TrueForAll((FurnitureType type) =>
                 {
@@ -106,7 +98,7 @@ public class FurniturePlacer : MonoBehaviour
                     furniture.origin = furniture.RotatedBottomLeft(selectedPosition);
 
                     Furniture newFurniture = Instantiate(furniture, furniture.WorldOrigin(selectedPosition), Quaternion.Euler(0f, furniture.rotation, 0f));
-
+                    IncrementFurniture(value.type);
                     AddToGrid(newFurniture);
                 }
             }
@@ -169,6 +161,18 @@ public class FurniturePlacer : MonoBehaviour
                 IncrementDecoration(decoration.type);
                 break;
             };
+        }
+    }
+
+    private void IncrementFurniture(FurnitureType type)
+    {
+        if (furnitureTotals.ContainsKey(type))
+        {
+            furnitureTotals[type]++;
+        }
+        else
+        {
+            furnitureTotals.Add(type, 1);
         }
     }
 
@@ -308,6 +312,7 @@ public class FurniturePlacer : MonoBehaviour
         float rotation = SelectRandom(new List<float> { 0f, 90f, 180f, 270f });
 
         // Wall
+        if (position.z == 0) rotation = 0f;
         if (position.x == 0) rotation = 90f;
         if (position.z == zLength - 1) rotation = 180f;
         if (position.x == xLength - 1) rotation = 270f;
@@ -421,6 +426,51 @@ public class FurniturePlacer : MonoBehaviour
         return list[index];
     }
 
+    private Furniture SelectRandomFurniture(FurnitureType type)
+    {
+        List<Furniture> validFurniture = randomFurniture.FindAll((Furniture item) =>
+        {
+            bool isCurrentType = furnitureTypeMap[type].Contains(item.type);
+            if (!isCurrentType) return false;
+
+            bool validForType = true;
+
+            switch (type)
+            {
+                case FurnitureType.Kitchen:
+                    // if less than 3 kitchen items place any of sink/kitchen/fridge if not maxed
+                    List<FurnitureType> initialTypes = new List<FurnitureType>{
+                        FurnitureType.Sink,
+                        FurnitureType.Fridge,
+                        FurnitureType.Stove,
+                    };
+
+                    if (!furnitureTotals.ContainsKey(FurnitureType.Kitchen))
+                    {
+                        validForType = initialTypes.Contains(item.type) || item.type == FurnitureType.CornerCounter;
+                    }
+                    else if (furnitureTotals[FurnitureType.Kitchen] < 3)
+                    {
+                        validForType = initialTypes.Contains(item.type);
+                    }
+                    else
+                    {
+                        validForType = item.type != FurnitureType.CornerCounter;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            List<Furniture> duplicates = placedFurniture.FindAll((placedFurn) => placedFurn.name == item.name + "(Clone)");
+            bool furnitureIsMaxed = item.max != 0 && duplicates.Count >= item.max;
+
+            return !furnitureIsMaxed && validForType;
+        });
+
+        return SelectRandom<Furniture>(validFurniture);
+    }
+
     private bool RugFits(Vector3 origin, int xLength, int zLength)
     {
         bool fits = true;
@@ -459,9 +509,12 @@ public class FurniturePlacer : MonoBehaviour
             FurnitureType.Door,
         });
 
-        furnitureTypeMap.Add(FurnitureType.Counter, new List<FurnitureType>{
+        furnitureTypeMap.Add(FurnitureType.Kitchen, new List<FurnitureType>{
             FurnitureType.Counter,
-            FurnitureType.CornerItem,
+            FurnitureType.CornerCounter,
+            FurnitureType.Fridge,
+            FurnitureType.Sink,
+            FurnitureType.Stove,
         });
 
         furnitureTypeMap.Add(FurnitureType.Bed, new List<FurnitureType>{
@@ -495,7 +548,6 @@ public class FurniturePlacer : MonoBehaviour
 
         // find all furniture with free spaces
         availableParents = placedFurniture.FindAll(furniture.FindDependantFurniture);
-        int furnitureIndex = random.Next(availableParents.Count);
 
         // find all valid spaces
         availableParents.ForEach((Furniture parent) =>

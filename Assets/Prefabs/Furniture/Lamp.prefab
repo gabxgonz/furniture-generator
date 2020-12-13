@@ -137,14 +137,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf991915c716d4bf89ccb7f707b7e228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 8
+  type: 10
   xLength: 1
   zLength: 1
   allowRug: 1
   max: 0
   rotation: 0
-  origin: {x: 2, y: 0, z: 1}
-  alignTo: 0000000003000000050000000c0000000b000000
+  origin: {x: 7, y: 0, z: 2}
+  alignTo: 0000000003000000050000000f00000010000000
   relativeLookDirection: 0000000000000000000000000000000000000000
   preferFront: 0
   preferBack: 0

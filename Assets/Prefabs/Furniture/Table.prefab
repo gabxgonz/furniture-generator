@@ -168,14 +168,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf991915c716d4bf89ccb7f707b7e228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 10
+  type: 14
   xLength: 2
   zLength: 2
   allowRug: 1
-  rotation: 0
-  origin: {x: 4, y: 0, z: 5}
-  relativeLookDirection: 2
+  max: 0
+  rotation: 180
+  origin: {x: 6, y: 0, z: 2}
   alignTo: 
+  relativeLookDirection: 
   preferFront: 1
   preferBack: 1
   preferLeft: 1

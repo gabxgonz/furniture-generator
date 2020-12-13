@@ -14,7 +14,7 @@ public class GameState : MonoBehaviour
         dimensions.Add("length", new FurnitureValue("Room Length", FurnitureType.Null, 8, 1, 12));
         dimensions.Add("width", new FurnitureValue("Room Width", FurnitureType.Null, 8, 1, 12));
         furnitureValues.Add("doors", new FurnitureValue("Doors", FurnitureType.Door, 1, 0, 10));
-        furnitureValues.Add("kitchen", new FurnitureValue("Kitchen", FurnitureType.Counter, 5, 0, 10));
+        furnitureValues.Add("kitchen", new FurnitureValue("Kitchen", FurnitureType.Kitchen, 5, 0, 10));
         furnitureValues.Add("beds", new FurnitureValue("Beds", FurnitureType.Bed, 1, 0, 10));
         furnitureValues.Add("couches", new FurnitureValue("Couches", FurnitureType.Couch, 1, 0, 10));
         furnitureValues.Add("tables", new FurnitureValue("Tables", FurnitureType.Table, 3, 0, 10));
