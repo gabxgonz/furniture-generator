@@ -305,7 +305,8 @@ public class FurniturePlacer : MonoBehaviour
 
     private float GetRotationDegrees(Vector3 position)
     {
-        float rotation = 0f;
+        float rotation = SelectRandom(new List<float> { 0f, 90f, 180f, 270f });
+
         // Wall
         if (position.x == 0) rotation = 90f;
         if (position.z == zLength - 1) rotation = 180f;
