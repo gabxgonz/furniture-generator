@@ -55,6 +55,7 @@ public class Furniture : MonoBehaviour
     public int xLength = 1;
     public int zLength = 1;
     public bool allowRug = true;
+    public int max = 0;
     [HideInInspector] public float rotation = 0f;
     [HideInInspector] public Vector3 origin = Vector3.zero;
 

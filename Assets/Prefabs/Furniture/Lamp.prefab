@@ -141,10 +141,11 @@ MonoBehaviour:
   xLength: 1
   zLength: 1
   allowRug: 1
+  max: 0
   rotation: 0
-  origin: {x: 7, y: 0, z: 4}
-  alignTo: 000000000300000005000000
-  relativeLookDirection: 000000000000000000000000
+  origin: {x: 2, y: 0, z: 1}
+  alignTo: 0000000003000000050000000c0000000b000000
+  relativeLookDirection: 0000000000000000000000000000000000000000
   preferFront: 0
   preferBack: 0
   preferLeft: 1

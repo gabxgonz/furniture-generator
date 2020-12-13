@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class FurniturePlacer : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class FurniturePlacer : MonoBehaviour
     private List<Furniture> tempFurniture;
     private Dictionary<FurnitureType, List<FurnitureType>> furnitureTypeMap;
     private System.Random random;
+    private Dictionary<DecorationType, int> decorationTotals = new Dictionary<DecorationType, int>();
+    private Dictionary<FurnitureType, int> furnitureTotals = new Dictionary<FurnitureType, int>();
 
     void Start()
     {
@@ -63,7 +66,13 @@ public class FurniturePlacer : MonoBehaviour
 
                 Furniture furniture = SelectRandom<Furniture>(randomFurniture.FindAll((Furniture item) =>
                 {
-                    return furnitureTypeMap[value.type].Contains(item.type);
+                    bool isCurrentType = furnitureTypeMap[value.type].Contains(item.type);
+                    if (!isCurrentType) return false;
+
+                    List<Furniture> duplicates = placedFurniture.FindAll((placedFurn) => placedFurn.name == item.name + "(Clone)");
+                    bool furnitureIsMaxed = item.max != 0 && duplicates.Count >= item.max;
+
+                    return !furnitureIsMaxed;
                 }));
 
                 bool hasNonWallParent = !furniture.alignTo.TrueForAll((FurnitureType type) =>
@@ -110,35 +119,68 @@ public class FurniturePlacer : MonoBehaviour
 
     private void PlaceDecorations()
     {
+        List<Furniture> availableParents = new List<Furniture>();
+        List<Transform> availablePositions = new List<Transform>();
+
         foreach (Decoration decoration in placedDecorations) Destroy(decoration.gameObject);
         placedDecorations.Clear();
+        decorationTotals.Clear();
 
         // while less than total
-        // pick all decorations that are not maxed
-        // shuffle
-        // find all decoration spaces
-        // shuffle
-        // try every space
-        foreach (Decoration decoration in decorations)
+        for (int i = 0; i < state.decorations.value; i++)
         {
-            // find dependent furnitures that aren't decorated
-            tempFurniture = placedFurniture.FindAll((Furniture furniture) =>
-            {
-                return furniture.decorationSpaces.Count > 0 && decoration.parentFurniture.Contains(furniture.type);
-            });
-            // select one of them
-            if (tempFurniture.Count == 0)
-            {
-                continue;
-            }
+            // pick all decorations that are not maxed
+            List<Decoration> unmaxedDecorations = new List<Decoration>();
 
-            int index = random.Next(tempFurniture.Count);
-            Furniture selectedFurniture = tempFurniture[index];
-            index = random.Next(selectedFurniture.decorationSpaces.Count);
-            Transform decorationPosition = selectedFurniture.decorationSpaces[index];
-            selectedFurniture.decorationSpaces.RemoveAt(index);
-            // place instance
-            placedDecorations.Add(Instantiate(decoration, decorationPosition.position, decorationPosition.transform.rotation));
+            decorations.ForEach((Decoration decoration) =>
+            {
+                bool typeIsMaxed = false;
+                bool decorationIsMaxed = false;
+
+                bool typeHasMax =
+                    decorationTotals.ContainsKey(decoration.type) &&
+                    state.decorationMax.ContainsKey(decoration.type);
+
+                if (typeHasMax) typeIsMaxed = decorationTotals[decoration.type] < state.decorationMax[decoration.type];
+
+                List<Decoration> duplicates = placedDecorations.FindAll((placedDecoration) => placedDecoration.name == decoration.name + "(Clone)");
+                decorationIsMaxed = decoration.max != 0 && duplicates.Count >= decoration.max;
+
+                if (!typeHasMax && !decorationIsMaxed) unmaxedDecorations.Add(decoration);
+            });
+
+            Shuffle(unmaxedDecorations);
+
+            foreach (Decoration decoration in unmaxedDecorations)
+            {
+                // find dependent furnitures that aren't decorated
+                availableParents = placedFurniture.FindAll((Furniture furniture) =>
+                {
+                    return furniture.decorationSpaces.Count > 0 && decoration.parentFurniture.Contains(furniture.type);
+                });
+
+                if (availableParents.Count <= 0) continue;
+
+                Furniture selectedFurniture = SelectRandom(availableParents);
+                Transform decorationPosition = SelectRandom(selectedFurniture.decorationSpaces);
+                selectedFurniture.decorationSpaces.Remove(decorationPosition);
+
+                placedDecorations.Add(Instantiate(decoration, decorationPosition.position, decorationPosition.transform.rotation));
+                IncrementDecoration(decoration.type);
+                break;
+            };
+        }
+    }
+
+    private void IncrementDecoration(DecorationType type)
+    {
+        if (decorationTotals.ContainsKey(type))
+        {
+            decorationTotals[type]++;
+        }
+        else
+        {
+            decorationTotals.Add(type, 1);
         }
     }
 
@@ -559,4 +601,3 @@ public class FurniturePlacer : MonoBehaviour
         }
     }
 }
-

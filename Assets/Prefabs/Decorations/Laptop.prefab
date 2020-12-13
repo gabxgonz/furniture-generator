@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentFurniture: 07000000050000000a000000
+  type: 4
 --- !u!1 &3911464198993637844
 GameObject:
   m_ObjectHideFlags: 0
