@@ -430,6 +430,7 @@ public class FurniturePlacer : MonoBehaviour
     {
         List<Furniture> validFurniture = randomFurniture.FindAll((Furniture item) =>
         {
+            List<FurnitureType> initialTypes;
             bool isCurrentType = furnitureTypeMap[type].Contains(item.type);
             if (!isCurrentType) return false;
 
@@ -438,8 +439,7 @@ public class FurniturePlacer : MonoBehaviour
             switch (type)
             {
                 case FurnitureType.Kitchen:
-                    // if less than 3 kitchen items place any of sink/kitchen/fridge if not maxed
-                    List<FurnitureType> initialTypes = new List<FurnitureType>{
+                    initialTypes = new List<FurnitureType>{
                         FurnitureType.Sink,
                         FurnitureType.Fridge,
                         FurnitureType.Stove,
@@ -450,6 +450,25 @@ public class FurniturePlacer : MonoBehaviour
                         validForType = initialTypes.Contains(item.type) || item.type == FurnitureType.CornerCounter;
                     }
                     else if (furnitureTotals[FurnitureType.Kitchen] < 3)
+                    {
+                        validForType = initialTypes.Contains(item.type);
+                    }
+                    else
+                    {
+                        validForType = item.type != FurnitureType.CornerCounter;
+                    }
+                    break;
+                case FurnitureType.Table:
+                    initialTypes = new List<FurnitureType>{
+                        FurnitureType.Desk,
+                        FurnitureType.Table,
+                    };
+
+                    if (!furnitureTotals.ContainsKey(FurnitureType.Table))
+                    {
+                        validForType = initialTypes.Contains(item.type);
+                    }
+                    else if (furnitureTotals[FurnitureType.Table] < 2)
                     {
                         validForType = initialTypes.Contains(item.type);
                     }

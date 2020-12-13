@@ -172,9 +172,9 @@ MonoBehaviour:
   xLength: 2
   zLength: 2
   allowRug: 1
-  max: 0
+  max: 1
   rotation: 180
-  origin: {x: 6, y: 0, z: 2}
+  origin: {x: 2, y: 0, z: 6}
   alignTo: 
   relativeLookDirection: 
   preferFront: 1

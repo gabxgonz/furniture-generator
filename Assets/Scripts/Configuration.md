@@ -20,13 +20,12 @@ The following items will try to spawn the same item up to the max amount indicat
 The following items have more complex algorithms.
 
 Kitchen
-1. Sink
-2. Fridge or Stove
-3. Fridge if Stove & vv
-5. Corner, Left or Right max 1 corner, max 1 left
+1. Fridge, Sink or Stove
+5. If all 3 above, Counter
 
 Tables
-1. Desk, table or end table, max 1 desk, max 1 table
+1. Desk, table for first 2
+1. Any table
 
 Lamps
 1. Floor or table lamp
