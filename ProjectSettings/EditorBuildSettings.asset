@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/start.unity
+    guid: bb4c34155ec0447dc9610c440fe1a937
+  - enabled: 1
+    path: Assets/Scenes/furniture-generator.unity
+    guid: 4564e5d20714d40e3b466e1b2bebdc7a
   m_configObjects: {}

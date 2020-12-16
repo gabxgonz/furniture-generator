@@ -48,12 +48,14 @@ public class Settings : MonoBehaviour
 
     private void InitSlider(TitledSlider slider, FurnitureValue value)
     {
+        Debug.Log("value:" + value.value);
         slider.title.SetText(value.title);
         slider.value.SetText(value.value.ToString());
-        slider.slider.SetValueWithoutNotify(value.value);
         slider.slider.minValue = value.minValue;
         slider.slider.maxValue = value.maxValue;
         slider.onSetValue = value.SetValue;
+        slider.slider.SetValueWithoutNotify((float)value.value);
         slider.furniturePlacer = furniturePlacer;
+        Debug.Log("Slider Vwlue: " + slider.slider.value);
     }
 }
