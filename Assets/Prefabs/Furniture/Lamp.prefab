@@ -102,6 +102,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3868127598267747991}
   - component: {fileID: 1843203707679572966}
+  - component: {fileID: 6640827092754710607}
+  - component: {fileID: -8844752129657401328}
+  - component: {fileID: 2776911234676018878}
+  - component: {fileID: 1654557628460619588}
+  - component: {fileID: -4247983059101799934}
   m_Layer: 0
   m_Name: Lamp
   m_TagString: Untagged
@@ -143,14 +148,7 @@ MonoBehaviour:
   allowRug: 1
   max: 0
   rotation: 0
-  origin: {x: 7, y: 0, z: 2}
-  alignTo: 0000000003000000050000000f00000010000000
-  relativeLookDirection: 0000000000000000000000000000000000000000
-  preferFront: 0
-  preferBack: 0
-  preferLeft: 1
-  preferRight: 1
-  preferCorner: 0
+  origin: {x: 3, y: 0, z: 1}
   frontAvailability: 1
   backAvailability: 1
   leftAvailability: 1
@@ -160,6 +158,102 @@ MonoBehaviour:
   backLeftAvailable: 1
   backRightAvailable: 1
   decorationSpaces: []
+  relatedFurnitureTypes: 
+--- !u!114 &6640827092754710607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7917495261707544048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 0
+  lookDirection: 0
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &-8844752129657401328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7917495261707544048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 5
+  lookDirection: 0
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &2776911234676018878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7917495261707544048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 3
+  lookDirection: 0
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &1654557628460619588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7917495261707544048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 6
+  lookDirection: 0
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &-4247983059101799934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7917495261707544048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 15
+  lookDirection: 0
+  preferFront: 1
+  preferBack: 0
+  preferLeft: 0
+  preferRight: 0
+  preferCorner: 0
 --- !u!1001 &1196163214716369140
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -10,6 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1754756241191131740}
   - component: {fileID: 5145059357289566386}
+  - component: {fileID: 850149248760777679}
+  - component: {fileID: 7487923364576612842}
+  - component: {fileID: -4947353460496128268}
+  - component: {fileID: 3534113091489527340}
+  - component: {fileID: 2161732406118488730}
   m_Layer: 0
   m_Name: Sink
   m_TagString: Untagged
@@ -49,15 +54,8 @@ MonoBehaviour:
   zLength: 1
   allowRug: 0
   max: 1
-  rotation: 180
-  origin: {x: 1, y: 0, z: 7}
-  alignTo: 04000000020000000d000000080000000f000000
-  relativeLookDirection: 0200000002000000020000000200000002000000
-  preferFront: 0
-  preferBack: 0
-  preferLeft: 1
-  preferRight: 1
-  preferCorner: 0
+  rotation: 90
+  origin: {x: 2, y: 0, z: 5}
   frontAvailability: 0
   backAvailability: 0
   leftAvailability: 1
@@ -67,6 +65,102 @@ MonoBehaviour:
   backLeftAvailable: 0
   backRightAvailable: 0
   decorationSpaces: []
+  relatedFurnitureTypes: 
+--- !u!114 &850149248760777679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754756241191131741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 4
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &7487923364576612842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754756241191131741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 8
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &-4947353460496128268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754756241191131741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 12
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &3534113091489527340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754756241191131741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 13
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &2161732406118488730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754756241191131741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 15
+  lookDirection: 1
+  preferFront: 1
+  preferBack: 0
+  preferLeft: 0
+  preferRight: 0
+  preferCorner: 0
 --- !u!1001 &1754756241870747513
 PrefabInstance:
   m_ObjectHideFlags: 0

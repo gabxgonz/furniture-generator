@@ -10,6 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1091578377513595418}
   - component: {fileID: 1003786222232981387}
+  - component: {fileID: 4290102445977091625}
+  - component: {fileID: 8239460860010713646}
+  - component: {fileID: 4075280901416722040}
+  - component: {fileID: 8378887054021061829}
+  - component: {fileID: -4817349735437792863}
+  - component: {fileID: -469473018248148349}
   m_Layer: 0
   m_Name: Cabinet Drawer 2
   m_TagString: Untagged
@@ -50,15 +56,8 @@ MonoBehaviour:
   zLength: 1
   allowRug: 0
   max: 0
-  rotation: 180
-  origin: {x: 3, y: 0, z: 7}
-  alignTo: 0200000004000000080000000d0000000c0000000f000000
-  relativeLookDirection: 020000000200000002000000020000000200000002000000
-  preferFront: 0
-  preferBack: 0
-  preferLeft: 1
-  preferRight: 1
-  preferCorner: 0
+  rotation: 270
+  origin: {x: 7, y: 0, z: 3}
   frontAvailability: 0
   backAvailability: 0
   leftAvailability: 1
@@ -69,6 +68,121 @@ MonoBehaviour:
   backRightAvailable: 0
   decorationSpaces:
   - {fileID: 8161017663098007102}
+  relatedFurnitureTypes: 0200000004000000080000000d0000000c0000000f000000
+--- !u!114 &4290102445977091625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260785600908143079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 2
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &8239460860010713646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260785600908143079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 4
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &4075280901416722040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260785600908143079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 8
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &8378887054021061829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260785600908143079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 13
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &-4817349735437792863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260785600908143079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 12
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &-469473018248148349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260785600908143079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 15
+  lookDirection: 1
+  preferFront: 1
+  preferBack: 0
+  preferLeft: 0
+  preferRight: 0
+  preferCorner: 0
 --- !u!1 &7399901546849349793
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5360438162236690040}
   - component: {fileID: 3579087059753526433}
+  - component: {fileID: -4963163833785236592}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -49,15 +50,8 @@ MonoBehaviour:
   zLength: 1
   allowRug: 1
   max: 0
-  rotation: 90
-  origin: {x: 4, y: 0, z: 0}
-  alignTo: 0f000000
-  relativeLookDirection: 01000000
-  preferFront: 1
-  preferBack: 0
-  preferLeft: 0
-  preferRight: 0
-  preferCorner: 0
+  rotation: 0
+  origin: {x: 3, y: 0, z: 1}
   frontAvailability: 0
   backAvailability: 0
   leftAvailability: 1
@@ -67,6 +61,26 @@ MonoBehaviour:
   backLeftAvailable: 1
   backRightAvailable: 1
   decorationSpaces: []
+  relatedFurnitureTypes: 
+--- !u!114 &-4963163833785236592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5588125355823167165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 15
+  lookDirection: 1
+  preferFront: 1
+  preferBack: 0
+  preferLeft: 0
+  preferRight: 0
+  preferCorner: 0
 --- !u!1001 &1249243623213508424
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -10,6 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3213022272064338714}
   - component: {fileID: 3213022272064338715}
+  - component: {fileID: 1670359039523906554}
+  - component: {fileID: -7682445459496932054}
+  - component: {fileID: -1685676689600650179}
+  - component: {fileID: 1904494206831584940}
   m_Layer: 0
   m_Name: Stove
   m_TagString: Untagged
@@ -51,13 +55,6 @@ MonoBehaviour:
   max: 1
   rotation: 0
   origin: {x: 2, y: 0, z: 0}
-  alignTo: 04000000020000000c000000080000000f000000
-  relativeLookDirection: 0200000002000000020000000200000001000000
-  preferFront: 0
-  preferBack: 0
-  preferLeft: 1
-  preferRight: 1
-  preferCorner: 0
   frontAvailability: 0
   backAvailability: 0
   leftAvailability: 1
@@ -67,6 +64,83 @@ MonoBehaviour:
   backLeftAvailable: 0
   backRightAvailable: 0
   decorationSpaces: []
+  relatedFurnitureTypes: 
+--- !u!114 &1670359039523906554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3213022272064338713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 4
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &-7682445459496932054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3213022272064338713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 8
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &-1685676689600650179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3213022272064338713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 12
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
+--- !u!114 &1904494206831584940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3213022272064338713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 15
+  lookDirection: 2
+  preferFront: 0
+  preferBack: 0
+  preferLeft: 1
+  preferRight: 1
+  preferCorner: 0
 --- !u!1001 &3213022272620649685
 PrefabInstance:
   m_ObjectHideFlags: 0
