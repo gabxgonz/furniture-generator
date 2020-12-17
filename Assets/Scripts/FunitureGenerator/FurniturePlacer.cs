@@ -330,7 +330,6 @@ public class FurniturePlacer : MonoBehaviour
         Vector3 bottomLeftCoord = furniture.origin;
         List<Vector3> reservedSpaces = furniture.ReservedSpaces();
 
-        // remove actual furniture spaces
         for (float x = 0; x < furniture.RotatedXLength(); x++)
         {
             for (float z = 0; z < furniture.RotatedZLength(); z++)
@@ -341,7 +340,6 @@ public class FurniturePlacer : MonoBehaviour
             }
         }
 
-        // remove surrounding invalid spaces
         furnitureCoordinates.RemoveAll((Vector3 coord) =>
         {
             return reservedSpaces.Contains(coord);
@@ -565,10 +563,8 @@ public class FurniturePlacer : MonoBehaviour
         List<Furniture> availableParents = new List<Furniture>();
         Dictionary<Vector3, Furniture> availableCoordinates = new Dictionary<Vector3, Furniture>();
 
-        // find all furniture with free spaces
         availableParents = placedFurniture.FindAll(furniture.FindParentFurniture);
 
-        // find all valid spaces
         availableParents.ForEach((Furniture parent) =>
         {
             parent.ValidSpaces(furniture).ForEach((Vector3 validSpace) =>
@@ -580,7 +576,6 @@ public class FurniturePlacer : MonoBehaviour
             });
         });
 
-        // try every valid space
         foreach (Vector3 coordinate in availableCoordinates.Keys)
         {
             furniture.SetParentRelativeRotation(coordinate, availableCoordinates[coordinate]);
@@ -599,7 +594,6 @@ public class FurniturePlacer : MonoBehaviour
         List<Vector3> availableCoordinates = new List<Vector3>();
         Vector3? position = null;
 
-        // find all corners and randomly sort
         availableCoordinates = furnitureCoordinates.FindAll(FindCorner);
         Shuffle(availableCoordinates);
 
@@ -621,7 +615,6 @@ public class FurniturePlacer : MonoBehaviour
         List<Vector3> availableCoordinates = new List<Vector3>();
         Vector3? position = null;
 
-        // find all available walls (use find all walls)
         availableCoordinates = furnitureCoordinates.FindAll(FindEdge);
         Shuffle(availableCoordinates);
 
@@ -641,8 +634,6 @@ public class FurniturePlacer : MonoBehaviour
     private Vector3? PlaceRandom(Furniture furniture)
     {
         Vector3? position = null;
-
-        // find all available walls (use find all walls)
 
         Shuffle(furnitureCoordinates);
 
