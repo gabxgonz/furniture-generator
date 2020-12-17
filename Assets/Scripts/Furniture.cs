@@ -2,27 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum FurnitureType
-{
-    Bed,
-    Chair,
-    CornerCounter,
-    Couch,
-    Counter,
-    Desk,
-    Door,
-    EndTable,
-    Fridge,
-    Kitchen,
-    Lamp,
-    Null,
-    Sink,
-    Stove,
-    Table,
-    Wall,
-    WallCorner
-}
-
 public enum SideSpace
 {
     None,
@@ -31,16 +10,6 @@ public enum SideSpace
     Last,
     Inner,
     Outer
-}
-
-public enum FacingDirection
-{
-    Toward,
-    Away,
-    Forward,
-    Backward,
-    Left,
-    Right
 }
 
 public enum Side
@@ -54,7 +23,6 @@ public enum Side
 
 public class Furniture : MonoBehaviour
 {
-
     public FurnitureType type = FurnitureType.Null;
     public int xLength = 1;
     public int zLength = 1;
@@ -62,18 +30,6 @@ public class Furniture : MonoBehaviour
     public int max = 0;
     [HideInInspector] public float rotation = 0f;
     [HideInInspector] public Vector3 origin = Vector3.zero;
-
-
-    [Header("Parent Furniture")]
-    public List<FurnitureType> alignTo;
-    public List<FacingDirection> relativeLookDirection;
-
-    [Header("Parent Side Preference")]
-    public bool preferFront = true;
-    public bool preferBack = true;
-    public bool preferLeft = true;
-    public bool preferRight = true;
-    public bool preferCorner = true;
 
     [Header("Available Child Spaces")]
     [Tooltip("Define spaces available for dependant furniture placement in front of this furniture.")]
@@ -112,6 +68,18 @@ public class Furniture : MonoBehaviour
     private bool relativeFrontRightAvailable;
     private bool relativeBackLeftAvailable;
     private bool relativeBackRightAvailable;
+
+    [HideInInspector] public List<FurnitureType> relatedFurnitureTypes;
+    private List<FurnitureRelationship> relationships = new List<FurnitureRelationship>();
+
+    public List<FurnitureRelationship> Relationships
+    {
+        get
+        {
+            if (relationships.Count > 0) return relationships;
+            return new List<FurnitureRelationship>(GetComponents<FurnitureRelationship>());
+        }
+    }
 
     void Start()
     {
@@ -293,10 +261,14 @@ public class Furniture : MonoBehaviour
         }
     }
 
-    public bool FindDependantFurniture(Furniture furniture)
+    public bool FindParentFurniture(Furniture parent)
     {
-        if (alignTo.Contains(furniture.type)) return true;
-        return false;
+        List<FurnitureRelationship> matchingRelationships = Relationships.FindAll(relationship =>
+        {
+            return relationship.parentType == parent.type;
+        });
+
+        return matchingRelationships.Count > 0;
     }
 
     public List<Vector3> ReservedSpaces()
@@ -706,31 +678,34 @@ public class Furniture : MonoBehaviour
     {
         Vector3 parentCenter = parent.Center();
         rotation = 0f;
-        int lookDirectionIndex = alignTo.IndexOf(parent.type);
-        FacingDirection direction = relativeLookDirection[lookDirectionIndex];
 
-        switch (direction)
+        FurnitureRelationship parentRelationship = Relationships.Find(relationship =>
         {
-            case FacingDirection.Toward:
+            return relationship.parentType == parent.type;
+        });
+
+        switch (parentRelationship.lookDirection)
+        {
+            case RelativeDirection.Toward:
                 if (position.x >= parent.FrontRight().x) rotation = 270f;
                 if (position.z >= parent.FrontRight().z) rotation = 180f;
                 if (position.x < parent.FrontLeft().x) rotation = 90f;
                 break;
-            case FacingDirection.Away:
+            case RelativeDirection.Away:
                 if (position.x >= parent.FrontRight().x) rotation = 90f;
                 if (position.z < parent.BottomLeft().z) rotation = 180f;
                 if (position.x < parent.BottomLeft().x) rotation = 270f;
                 break;
-            case FacingDirection.Forward:
+            case RelativeDirection.Forward:
                 rotation = parent.rotation;
                 break;
-            case FacingDirection.Right:
+            case RelativeDirection.Right:
                 rotation = parent.rotation + 90f;
                 break;
-            case FacingDirection.Backward:
+            case RelativeDirection.Backward:
                 rotation = parent.rotation + 180f;
                 break;
-            case FacingDirection.Left:
+            case RelativeDirection.Left:
                 rotation = parent.rotation + 270f;
                 break;
             default:
@@ -754,46 +729,70 @@ public class Furniture : MonoBehaviour
     {
         Dictionary<Side, bool> preferences;
 
+        // Find parent relationship in child
+        FurnitureRelationship childRelationship = childFurniture.Relationships.Find(relationship =>
+        {
+            return relationship.parentType == type;
+        });
+
         switch (rotation)
         {
             case 90f:
                 preferences = new Dictionary<Side, bool>(){
-                    { Side.Front, childFurniture.preferRight},
-                    { Side.Back, childFurniture.preferLeft},
-                    { Side.Left, childFurniture.preferBack},
-                    { Side.Right, childFurniture.preferFront},
-                    { Side.Corner, childFurniture.preferCorner},
+                    { Side.Front, childRelationship.preferRight},
+                    { Side.Back, childRelationship.preferLeft},
+                    { Side.Left, childRelationship.preferBack},
+                    { Side.Right, childRelationship.preferFront},
+                    { Side.Corner, childRelationship.preferCorner},
                 };
                 break;
             case 180f:
                 preferences = new Dictionary<Side, bool>(){
-                    { Side.Front, childFurniture.preferBack},
-                    { Side.Back, childFurniture.preferFront},
-                    { Side.Left, childFurniture.preferRight},
-                    { Side.Right, childFurniture.preferLeft},
-                    { Side.Corner, childFurniture.preferCorner},
+                    { Side.Front, childRelationship.preferBack},
+                    { Side.Back, childRelationship.preferFront},
+                    { Side.Left, childRelationship.preferRight},
+                    { Side.Right, childRelationship.preferLeft},
+                    { Side.Corner, childRelationship.preferCorner},
                 };
                 break;
             case 270f:
                 preferences = new Dictionary<Side, bool>(){
-                    { Side.Front, childFurniture.preferLeft},
-                    { Side.Back, childFurniture.preferRight},
-                    { Side.Left, childFurniture.preferFront},
-                    { Side.Right, childFurniture.preferBack},
-                    { Side.Corner, childFurniture.preferCorner},
+                    { Side.Front, childRelationship.preferLeft},
+                    { Side.Back, childRelationship.preferRight},
+                    { Side.Left, childRelationship.preferFront},
+                    { Side.Right, childRelationship.preferBack},
+                    { Side.Corner, childRelationship.preferCorner},
                 };
                 break;
             default:
                 preferences = new Dictionary<Side, bool>(){
-                { Side.Front, childFurniture.preferFront},
-                { Side.Back, childFurniture.preferBack},
-                { Side.Left, childFurniture.preferLeft},
-                { Side.Right, childFurniture.preferRight},
-                { Side.Corner, childFurniture.preferCorner},
+                { Side.Front, childRelationship.preferFront},
+                { Side.Back, childRelationship.preferBack},
+                { Side.Left, childRelationship.preferLeft},
+                { Side.Right, childRelationship.preferRight},
+                { Side.Corner, childRelationship.preferCorner},
             };
                 break;
         }
 
         return preferences;
+    }
+
+    public IList<FurnitureType> RelatedFurnitureTypes
+    {
+        get
+        {
+            if (relatedFurnitureTypes.Count > 0) return relatedFurnitureTypes.AsReadOnly();
+
+            foreach (FurnitureRelationship relationship in Relationships)
+            {
+                if (!relatedFurnitureTypes.Contains(relationship.parentType))
+                {
+                    relatedFurnitureTypes.Add(relationship.parentType);
+                }
+            }
+
+            return relatedFurnitureTypes.AsReadOnly();
+        }
     }
 }

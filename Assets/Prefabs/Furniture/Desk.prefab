@@ -70,6 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2673084602788498710}
   - component: {fileID: 7331650944336739022}
+  - component: {fileID: 5662725742434735419}
   m_Layer: 0
   m_Name: Desk
   m_TagString: Untagged
@@ -111,15 +112,8 @@ MonoBehaviour:
   zLength: 1
   allowRug: 1
   max: 1
-  rotation: 90
-  origin: {x: 0, y: 0, z: 0}
-  alignTo: 0f000000
-  relativeLookDirection: 02000000
-  preferFront: 1
-  preferBack: 0
-  preferLeft: 0
-  preferRight: 0
-  preferCorner: 0
+  rotation: 270
+  origin: {x: 7, y: 0, z: 1}
   frontAvailability: 2
   backAvailability: 0
   leftAvailability: 1
@@ -131,6 +125,26 @@ MonoBehaviour:
   decorationSpaces:
   - {fileID: 1491144080210976801}
   - {fileID: 1166500664274049872}
+  relatedFurnitureTypes: 
+--- !u!114 &5662725742434735419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8593194396862592711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff4ef733b1384ddf81126f4fbf17f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentType: 15
+  lookDirection: 1
+  preferFront: 1
+  preferBack: 0
+  preferLeft: 0
+  preferRight: 0
+  preferCorner: 0
 --- !u!1001 &6941868147251846496
 PrefabInstance:
   m_ObjectHideFlags: 0

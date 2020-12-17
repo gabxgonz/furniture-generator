@@ -67,7 +67,7 @@ public class FurniturePlacer : MonoBehaviour
 
                 Furniture furniture = SelectRandomFurniture(value.type);
 
-                bool hasNonWallParent = !furniture.alignTo.TrueForAll((FurnitureType type) =>
+                bool hasNonWallParent = !furniture.relatedFurnitureTypes.TrueForAll((FurnitureType type) =>
                 {
                     return type == FurnitureType.Wall || type == FurnitureType.WallCorner;
                 });
@@ -77,12 +77,12 @@ public class FurniturePlacer : MonoBehaviour
                     position = PlaceRelativeParent(furniture);
                 }
 
-                if (furniture.alignTo.Contains(FurnitureType.WallCorner) && position == null)
+                if (furniture.relatedFurnitureTypes.Contains(FurnitureType.WallCorner) && position == null)
                 {
                     position = PlaceRelativeCorner(furniture);
                 }
 
-                if (furniture.alignTo.Contains(FurnitureType.Wall) && position == null)
+                if (furniture.RelatedFurnitureTypes.Contains(FurnitureType.Wall) && position == null)
                 {
                     position = PlaceRelativeWall(furniture);
                 }
@@ -566,7 +566,7 @@ public class FurniturePlacer : MonoBehaviour
         Dictionary<Vector3, Furniture> availableCoordinates = new Dictionary<Vector3, Furniture>();
 
         // find all furniture with free spaces
-        availableParents = placedFurniture.FindAll(furniture.FindDependantFurniture);
+        availableParents = placedFurniture.FindAll(furniture.FindParentFurniture);
 
         // find all valid spaces
         availableParents.ForEach((Furniture parent) =>

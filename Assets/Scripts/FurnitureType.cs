@@ -1,0 +1,20 @@
+public enum FurnitureType
+{
+    Bed,
+    Chair,
+    CornerCounter,
+    Couch,
+    Counter,
+    Desk,
+    Door,
+    EndTable,
+    Fridge,
+    Kitchen,
+    Lamp,
+    Null,
+    Sink,
+    Stove,
+    Table,
+    Wall,
+    WallCorner
+}
